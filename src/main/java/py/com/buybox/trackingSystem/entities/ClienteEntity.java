@@ -36,6 +36,10 @@ public class ClienteEntity implements Serializable {
     @JoinColumn(name = "id_segmento", nullable = false)
     private SegmentoEntity segmento;
 
+    @ManyToOne
+    @JoinColumn(name = "id_sucursal", nullable = false)
+    private SucursalEntity sucursal;
+
     @Column(name = "nombre", nullable = false)
     private String nombre;
 

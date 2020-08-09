@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 
 @Table(name = "bb_paquete")
@@ -72,5 +73,9 @@ public class PaqueteEntity implements Serializable {
 
     @OneToMany(mappedBy="paquete", cascade = CascadeType.ALL)
     private List<RastreoEntity> rastreoList;
+
+    @Column(name = "ingreso")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar ingreso;
     
 }

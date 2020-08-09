@@ -63,5 +63,8 @@ public class SucursalEntity implements Serializable {
     @OneToMany(mappedBy="sucursal", cascade = CascadeType.ALL)
     private List<RastreoEntity> rastreoList;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
+    private List<ClienteEntity> clienteList;
+
     
 }
