@@ -16,6 +16,8 @@ public class ResponseHeader implements Serializable {
 
     private String level;
 
+    private String developerMessage;
+
     private HashMap<String, String> additionalParams;
 
     public ResponseHeader() {

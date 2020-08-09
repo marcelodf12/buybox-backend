@@ -1,7 +1,9 @@
 package py.com.buybox.trackingSystem.repository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,12 +24,13 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
             "    UPPER(bc.casilla) like UPPER(CONCAT('%', ?4, '%')) AND\n" +
             "    bc.id = coalesce(?5, bc.id) AND\n" +
             "    P.ingreso >= ?6 AND P.ingreso <= ?7\n")
-    List<PaqueteEntity> findPaquete(String codigoExterno,
+    Page<PaqueteEntity> findPaquete(String codigoExterno,
                                     String codigoInterno,
                                     String vuelo,
                                     String casilla,
                                     Integer idSucursal,
                                     Calendar desde,
-                                    Calendar hasta
+                                    Calendar hasta,
+                                    PageRequest pageRequest
                                     );
 }

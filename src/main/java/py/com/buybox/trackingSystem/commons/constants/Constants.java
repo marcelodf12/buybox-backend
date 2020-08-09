@@ -9,7 +9,6 @@ public class Constants {
     public static final String TYPE_POPUP_ACCEPT = "popup:accept";
     public static final String TYPE_PAGE = "page";
 
-
     public static final Integer HEADER_CODE_SUCCESS = 0;
     public static final Integer HEADER_CODE_CLIENT_NOT_FOUND = 2;
 

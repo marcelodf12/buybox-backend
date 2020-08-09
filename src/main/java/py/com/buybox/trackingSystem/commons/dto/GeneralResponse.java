@@ -1,11 +1,15 @@
 package py.com.buybox.trackingSystem.commons.dto;
 
+import lombok.Data;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import py.com.buybox.trackingSystem.commons.constants.Constants;
+import py.com.buybox.trackingSystem.commons.constants.HeadersCodes;
 
 import java.beans.Transient;
 import java.io.Serializable;
 
+@Data
 public class GeneralResponse<T, M> implements Serializable {
 
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -20,28 +24,13 @@ public class GeneralResponse<T, M> implements Serializable {
         header = new ResponseHeader();
     }
 
-    public ResponseHeader getHeader() {
-        return header;
-    }
-
-    public void setHeader(ResponseHeader header) {
-        this.header = header;
-    }
-
-    public T getBody() {
-        return body;
-    }
-
-    public void setBody(T body) {
-        this.body = body;
-    }
-
-    public M getMeta() {
-        return meta;
-    }
-
-    public void setMeta(M meta) {
-        this.meta = meta;
+    public GeneralResponse(Exception e) {
+        header = new ResponseHeader();
+        header.setCode(HeadersCodes.GENERAL_ERROR);
+        header.setDeveloperMessage(e.getMessage());
+        header.setShow(true);
+        header.setLevel(Constants.LEVEL_ERROR);
+        header.setType(Constants.TYPE_TOAST);
     }
 
     @Transient
