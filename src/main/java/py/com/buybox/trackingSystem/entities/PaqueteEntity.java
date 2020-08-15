@@ -48,6 +48,10 @@ public class PaqueteEntity implements Serializable {
     private SucursalEntity sucursalDestino;
 
     @ManyToOne
+    @JoinColumn(name = "id_sucursal_actual", nullable = false)
+    private SucursalEntity sucursalActual;
+
+    @ManyToOne
     @JoinColumn(name = "id_estado", nullable = false)
     private EstadoEntity estado;
 

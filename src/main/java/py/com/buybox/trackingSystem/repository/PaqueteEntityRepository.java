@@ -23,7 +23,7 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
             "    UPPER(P.codigoInterno) like UPPER(CONCAT('%', ?2, '%')) AND\n" +
             "    UPPER(P.vuelo) like UPPER(CONCAT('%', ?3, '%')) AND\n" +
             "    UPPER(bc.casilla) like UPPER(CONCAT('%', ?4, '%')) AND\n" +
-            "    bc.id = coalesce(?5, bc.id) AND\n" +
+            "    P.sucursalActual.id = coalesce(?5, P.sucursalActual.id) AND\n" +
             "    P.ingreso >= ?6 AND P.ingreso <= ?7\n")
     Page<PaqueteEntity> findPaquete(String codigoExterno,
                                     String codigoInterno,
