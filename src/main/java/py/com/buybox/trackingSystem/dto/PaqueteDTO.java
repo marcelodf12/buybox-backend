@@ -27,6 +27,7 @@ public class PaqueteDTO {
     private String codigoExterno;
     private Integer idEstado;
     private Calendar ingreso;
+    private String destino;
 
     public PaqueteDTO(PaqueteEntity paqueteEntity){
         this.idPaquete=paqueteEntity.getIdPaquete();
@@ -46,6 +47,7 @@ public class PaqueteDTO {
         this.codigoInterno=paqueteEntity.getCodigoInterno();
         this.codigoExterno=paqueteEntity.getCodigoExterno();
         this.idEstado=paqueteEntity.getEstado().getIdEstado();
+        this.destino=paqueteEntity.getSucursalDestino().getNombre();
     }
 
     public static List<PaqueteDTO> listFromEntity(List<PaqueteEntity> paqueteEntityList){

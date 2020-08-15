@@ -17,6 +17,7 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
 
     @Query("SELECT P FROM PaqueteEntity P\n" +
             "JOIN P.cliente bc\n" +
+            "JOIN P.sucursalDestino s\n" +
             "WHERE\n" +
             "    UPPER(P.codigoExterno) like UPPER(CONCAT('%', ?1, '%')) AND\n" +
             "    UPPER(P.codigoInterno) like UPPER(CONCAT('%', ?2, '%')) AND\n" +
