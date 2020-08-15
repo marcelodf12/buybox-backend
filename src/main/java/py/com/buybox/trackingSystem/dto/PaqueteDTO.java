@@ -50,6 +50,7 @@ public class PaqueteDTO {
         this.idEstado=paqueteEntity.getEstado().getIdEstado();
         this.destino=paqueteEntity.getSucursalDestino().getNombre();
         this.sucursalActual=paqueteEntity.getSucursalActual().getNombre();
+        this.ingreso=paqueteEntity.getIngreso();
     }
 
     public static List<PaqueteDTO> listFromEntity(List<PaqueteEntity> paqueteEntityList){
