@@ -51,6 +51,7 @@ public class PaqueteRest {
         GeneralResponse<List<PaqueteDTO>, Paginable> r = (new GeneralResponse<>());
         Page<PaqueteEntity> pagePaquete = null;
         try {
+            logger.debug(sorting);
             pagePaquete = paqueteEntityRepository.findPaquete(
                     codigoExterno,
                     codigoInterno,
@@ -59,7 +60,7 @@ public class PaqueteRest {
                     idSucursal,
                     DateUtils.toCalendar(desde),
                     DateUtils.toCalendar(hasta),
-                    PageRequest.of(currentPage, perPage, Sort.by(SortUtil.sortingList(sorting)))
+                    PageRequest.of(currentPage, perPage, Sort.by(SortUtil.sortingList(sorting, "paquetes")))
 
             );
         }catch (Exception e){
