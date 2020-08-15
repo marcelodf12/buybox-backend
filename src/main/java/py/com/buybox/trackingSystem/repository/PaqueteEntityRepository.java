@@ -22,6 +22,7 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
             "    UPPER(P.codigoExterno) like UPPER(CONCAT('%', ?1, '%')) AND\n" +
             "    UPPER(P.codigoInterno) like UPPER(CONCAT('%', ?2, '%')) AND\n" +
             "    UPPER(P.numeroTracking) like UPPER(CONCAT('%', ?8, '%')) AND\n" +
+            "    UPPER(CONCAT(bc.nombre, ' ' , bc.apellido)) like UPPER(CONCAT('%', ?9, '%')) AND\n" +
             "    UPPER(P.vuelo) like UPPER(CONCAT('%', ?3, '%')) AND\n" +
             "    UPPER(bc.casilla) like UPPER(CONCAT('%', ?4, '%')) AND\n" +
             "    P.sucursalActual.id = coalesce(?5, P.sucursalActual.id) AND\n" +
@@ -34,6 +35,7 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
                                     Calendar desde,
                                     Calendar hasta,
                                     String numeroTracking,
+                                    String cliente,
                                     PageRequest pageRequest
                                     );
 }

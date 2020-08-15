@@ -45,10 +45,11 @@ public class SortUtil {
                     Map.ofEntries(
                             entry("default","bc.casilla"),
                             entry("casilla","bc.casilla"),
-                            entry("cliente",""),
-                            entry("trackPaquete","P.codigoExterno"),
-                            entry("trackProveedor","P.codigoInterno"),
-                            entry("ingreso","P.ingreso"),
+                            entry("cliente","bc.apellido"),
+                            entry("trackPaquete","codigoExterno"),
+                            entry("trackProveedor","codigoInterno"),
+                            entry("numeroTracking","numeroTracking"),
+                            entry("ingreso","ingreso"),
                             entry("destino","s.nombre")
                     )
             )

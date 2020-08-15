@@ -42,6 +42,7 @@ public class PaqueteRest {
             @RequestParam(defaultValue = "") String vuelo,
             @RequestParam(defaultValue = "") String casilla,
             @RequestParam(defaultValue = "") String numeroTracking,
+            @RequestParam(defaultValue = "") String cliente,
             @RequestParam(defaultValue = "1999-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") Date desde,
             @RequestParam(defaultValue = "2050-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") Date hasta,
             @RequestParam Integer idSucursal,
@@ -62,6 +63,7 @@ public class PaqueteRest {
                     DateUtils.toCalendar(desde),
                     DateUtils.toCalendar(hasta),
                     numeroTracking,
+                    cliente,
                     PageRequest.of(currentPage, perPage, Sort.by(SortUtil.sortingList(sorting, "paquetes")))
 
             );
