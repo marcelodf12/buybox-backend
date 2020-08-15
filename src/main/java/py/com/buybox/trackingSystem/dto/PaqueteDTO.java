@@ -23,6 +23,7 @@ public class PaqueteDTO {
     private String autorizadoDocumento;
     private Long montoTotal;
     private Integer idCliente;
+    private String clienteNombreApellido;
     private String codigoInterno;
     private String codigoExterno;
     private Integer idEstado;
@@ -44,13 +45,22 @@ public class PaqueteDTO {
         this.autorizadoNombre=paqueteEntity.getAutorizadoNombre();
         this.autorizadoDocumento=paqueteEntity.getAutorizadoDocumento();
         this.montoTotal=paqueteEntity.getMontoTotal();
-        this.idCliente=paqueteEntity.getCliente().getIdCliente();
         this.codigoInterno=paqueteEntity.getCodigoInterno();
         this.codigoExterno=paqueteEntity.getCodigoExterno();
-        this.idEstado=paqueteEntity.getEstado().getIdEstado();
-        this.destino=paqueteEntity.getSucursalDestino().getNombre();
-        this.sucursalActual=paqueteEntity.getSucursalActual().getNombre();
         this.ingreso=paqueteEntity.getIngreso();
+        if(paqueteEntity.getCliente()!=null) {
+            this.idCliente = paqueteEntity.getCliente().getIdCliente();
+            this.clienteNombreApellido=paqueteEntity.getCliente().getApellido() + ", " + paqueteEntity.getCliente().getNombre();
+        }
+        if(paqueteEntity.getEstado()!=null){
+            this.idEstado=paqueteEntity.getEstado().getIdEstado();
+        }
+        if(paqueteEntity.getSucursalDestino()!=null){
+            this.destino=paqueteEntity.getSucursalDestino().getNombre();
+        }
+        if(paqueteEntity.getSucursalActual()!=null){
+            this.sucursalActual=paqueteEntity.getSucursalActual().getNombre();
+        }
     }
 
     public static List<PaqueteDTO> listFromEntity(List<PaqueteEntity> paqueteEntityList){
