@@ -30,6 +30,7 @@ public class PaqueteDTO {
     private Calendar ingreso;
     private String destino;
     private String sucursalActual;
+    private String casilla;
 
     public PaqueteDTO(PaqueteEntity paqueteEntity){
         this.idPaquete=paqueteEntity.getIdPaquete();
@@ -51,6 +52,7 @@ public class PaqueteDTO {
         if(paqueteEntity.getCliente()!=null) {
             this.idCliente = paqueteEntity.getCliente().getIdCliente();
             this.clienteNombreApellido=paqueteEntity.getCliente().getApellido() + ", " + paqueteEntity.getCliente().getNombre();
+            this.casilla=paqueteEntity.getCliente().getCasilla();
         }
         if(paqueteEntity.getEstado()!=null){
             this.idEstado=paqueteEntity.getEstado().getIdEstado();
