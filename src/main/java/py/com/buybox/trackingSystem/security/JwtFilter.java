@@ -22,7 +22,12 @@ public class JwtFilter extends GenericFilterBean {
 
         Authentication authentication = JwtUtil.getAuthentication((HttpServletRequest)request);
 
+        logger.debug("JwtFilter:doFilter:26");
+        logger.debug(authentication);
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
 
         filterChain.doFilter(request,response);
     }
