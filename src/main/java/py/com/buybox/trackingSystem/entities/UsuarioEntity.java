@@ -43,7 +43,7 @@ public class UsuarioEntity implements Serializable {
     @Column(name = "intentos_fallidos")
     private Integer intentosFallidos;
 
-    @Column(name = "link_de_recuperacion")
+    @Column(name = "link_de_recuperacion", unique=true)
     private String linkDeRecuperacion;
 
     @Column(name = "link_fecha_vencimiento")
