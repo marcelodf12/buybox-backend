@@ -63,7 +63,7 @@ public class AuthenticationService {
 
         user.setLinkDeRecuperacion(link(accountDto.getCorreo(), EntitiesValues.PERMISO_CONFIRMAR_REGISTRO));
 
-        user.setActivo(0);
+        user.setActivo(EntitiesValues.USUARIO_CREADO);
         user.setIntentosFallidos(0);
         user.setPass(passwordEncoder.encode(accountDto.getPass()));
 

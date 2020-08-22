@@ -37,7 +37,7 @@ public class UsuarioEntity implements Serializable {
     @Column(name = "bloqueado_hasta")
     private Calendar bloqueadoHasta;
 
-    @Column(name = "correo", nullable = false)
+    @Column(name = "correo", nullable = false, unique = true)
     private String correo;
 
     @Column(name = "intentos_fallidos")
