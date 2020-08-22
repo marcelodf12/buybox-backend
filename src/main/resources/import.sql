@@ -1,3 +1,18 @@
+/* PERMISOS */
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (1, 'CLIENT', 'Permiso por default para clientes');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (2, 'LIST_PAQUETE', 'Permiso para listar paquetes de usuario');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (3, 'ALTA_PAQUETE', 'Permiso para crear paquetes');
+
+INSERT INTO bb_rol (id_rol, rol, descripcion) VALUES (1, 'CLIENTE', 'Cliente Final');
+INSERT INTO bb_rol (id_rol, rol, descripcion) VALUES (2, 'ADMIN', 'Administrador de sistema');
+INSERT INTO bb_rol (id_rol, rol, descripcion) VALUES (3, 'EMPLOY', 'Empleado');
+
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (1, 1);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 2);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 2);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 3);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 3);
+
 /* ESTADOS */
 INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (1, 'nuevo', 'Nuevo', 'fff');
 INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (2, 'transito', 'En tránsito', 'fff');

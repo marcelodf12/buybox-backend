@@ -12,6 +12,15 @@ import java.util.List;
 @Entity
 @Data
 public class UsuarioEntity implements Serializable {
+
+    /*
+        ESTADOS:
+            -1  : Eliminado
+            0   : Inactivo
+            1   : Activo
+
+     */
+
     private static final long serialVersionUID = 1L;
 
     @Id

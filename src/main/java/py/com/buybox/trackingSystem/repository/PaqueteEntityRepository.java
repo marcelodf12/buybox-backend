@@ -2,17 +2,13 @@ package py.com.buybox.trackingSystem.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestParam;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 
-import java.util.Calendar;
-import java.util.List;
+import java.time.LocalDate;
+
 
 public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, Integer>, JpaSpecificationExecutor<PaqueteEntity> {
 
@@ -33,8 +29,8 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
                                     String vuelo,
                                     String casilla,
                                     Integer idSucursal,
-                                    Calendar desde,
-                                    Calendar hasta,
+                                    LocalDate desde,
+                                    LocalDate hasta,
                                     String numeroTracking,
                                     String cliente,
                                     PageRequest pageRequest

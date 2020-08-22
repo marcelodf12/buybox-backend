@@ -6,4 +6,5 @@ import py.com.buybox.trackingSystem.entities.UsuarioEntity;
 
 public interface UsuarioEntityRepository extends JpaRepository<UsuarioEntity, Integer>, JpaSpecificationExecutor<UsuarioEntity> {
 
+
 }

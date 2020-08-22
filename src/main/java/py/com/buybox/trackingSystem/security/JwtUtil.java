@@ -18,9 +18,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Collections.emptyList;
 
 public class JwtUtil {
 
@@ -97,6 +94,21 @@ public class JwtUtil {
                     null;
         }
         return null;
+    }
+
+    public static String getClaim(String token, String claim){
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(appConfig.secret)
+                    .parseClaimsJws(token.replace("Bearer", "").trim())
+                    .getBody();
+            String claimStr = claims.get(claim).toString();
+            logger.debug(claimStr);
+            return claimStr;
+        }catch (Exception e){
+            logger.error(e);
+            return null;
+        }
     }
 
     public static void setAppConfig ( AppConfig _appConfig ) {
