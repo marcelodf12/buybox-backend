@@ -56,9 +56,6 @@ public class UsuarioEntity implements Serializable {
     @Column(name = "pass")
     private String pass;
 
-    @Column(name = "salt")
-    private String salt;
-
     @ManyToMany
     @JoinTable(
             name = "bb_usuario_rol",

@@ -19,7 +19,6 @@ public class UsuarioDTO {
     private String linkDeRecuperacion;
     private Calendar linkFechaVencimiento;
     private String pass;
-    private String salt;
 
     public UsuarioDTO(UsuarioEntity _user){
         if(_user.getIdUsuario()!=null){
