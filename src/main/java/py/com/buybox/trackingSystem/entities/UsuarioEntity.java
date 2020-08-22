@@ -63,5 +63,8 @@ public class UsuarioEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_rol"))
     private List<RolEntity> rolList;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private ClienteEntity cliente;
+
     
 }

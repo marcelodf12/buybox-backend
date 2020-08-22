@@ -26,7 +26,7 @@ public class ClienteEntity implements Serializable {
     @Column(name = "celular")
     private String celular;
 
-    @Column(name = "correo")
+    @Column(name = "correo", unique = true)
     private String correo;
 
     @Column(name = "direccion")
@@ -51,6 +51,10 @@ public class ClienteEntity implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
     private List<PaqueteEntity> paqueteList;
+
+    @OneToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private UsuarioEntity usuario;
 
     
 }

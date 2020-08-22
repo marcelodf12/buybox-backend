@@ -6,4 +6,5 @@ import py.com.buybox.trackingSystem.entities.ClienteEntity;
 
 public interface ClienteEntityRepository extends JpaRepository<ClienteEntity, Integer>, JpaSpecificationExecutor<ClienteEntity> {
 
+    ClienteEntity findByCorreo(String correo);
 }

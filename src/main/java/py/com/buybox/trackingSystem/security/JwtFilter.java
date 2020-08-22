@@ -19,16 +19,11 @@ public class JwtFilter extends GenericFilterBean {
                          FilterChain filterChain)
             throws IOException, ServletException {
 
-
         Authentication authentication = JwtUtil.getAuthentication((HttpServletRequest)request);
-
-        logger.debug("JwtFilter:doFilter:26");
-        logger.debug(authentication);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-
-
         filterChain.doFilter(request,response);
+        return;
     }
 }

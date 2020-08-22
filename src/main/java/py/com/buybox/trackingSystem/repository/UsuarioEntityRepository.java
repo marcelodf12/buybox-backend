@@ -4,7 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import py.com.buybox.trackingSystem.entities.UsuarioEntity;
 
+import java.util.List;
+
 public interface UsuarioEntityRepository extends JpaRepository<UsuarioEntity, Integer>, JpaSpecificationExecutor<UsuarioEntity> {
 
+    UsuarioEntity findByLinkDeRecuperacion(String linkDeRecuperacion);
 
 }

@@ -19,6 +19,21 @@ public class AppConfig {
     @Value("${jwt.expiration}")
     public Integer expiration;
 
+    @Value("${register.expiration}")
+    public Integer registerExpiration;
+
+    @Value("${register.secret}")
+    public String registerSecret;
+
+    @Value("${default.segmento}")
+    public Integer defaultIdSegmento;
+
+    @Value("${default.sucursal}")
+    public Integer defaultIdSucursal;
+
+    @Value("${prefix.casilla}")
+    public String prefixCasilla;
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();

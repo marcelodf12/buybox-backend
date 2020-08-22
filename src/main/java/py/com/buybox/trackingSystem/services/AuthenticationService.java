@@ -1,20 +1,33 @@
 package py.com.buybox.trackingSystem.services;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import py.com.buybox.trackingSystem.AppConfig;
+import py.com.buybox.trackingSystem.commons.constants.Constants;
+import py.com.buybox.trackingSystem.commons.constants.EntitiesValues;
 import py.com.buybox.trackingSystem.commons.util.RandomUtil;
 import py.com.buybox.trackingSystem.dto.UsuarioDTO;
-import py.com.buybox.trackingSystem.entities.UsuarioEntity;
-import py.com.buybox.trackingSystem.repository.RolEntityRepository;
-import py.com.buybox.trackingSystem.repository.UsuarioEntityRepository;
+import py.com.buybox.trackingSystem.entities.*;
+import py.com.buybox.trackingSystem.repository.*;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Semaphore;
 
 @Service
 public class AuthenticationService {
+
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -25,15 +38,30 @@ public class AuthenticationService {
     @Autowired
     private UsuarioEntityRepository usuarioEntityRepository;
 
-    public UsuarioEntity registerNewUserAccount(UsuarioDTO accountDto, List<String> roles) throws DataIntegrityViolationException {
+    @Autowired
+    private SegmentoEntityRepository segmentoEntityRepository;
+
+    @Autowired
+    private SucursalEntityRepository sucursalEntityRepository;
+
+    @Autowired
+    private ClienteEntityRepository clienteEntityRepository;
+
+    @Autowired
+    private CasillaEntityRepository casillaEntityRepository;
+
+    @Autowired
+    private AppConfig appConfig;
+
+    public ClienteEntity registerNewUserAccount(UsuarioDTO accountDto, List<String> roles) throws DataIntegrityViolationException {
 
         UsuarioEntity user = UsuarioDTO.newEntity(accountDto);
 
         Calendar vencimiento = Calendar.getInstance();
-        vencimiento.add(Calendar.DAY_OF_YEAR, 2);
+        vencimiento.add(Calendar.SECOND, appConfig.registerExpiration*1000);
         user.setLinkFechaVencimiento(vencimiento);
 
-        user.setLinkDeRecuperacion(RandomUtil.stringRandom(256));
+        user.setLinkDeRecuperacion(link(accountDto.getCorreo(), EntitiesValues.PERMISO_CONFIRMAR_REGISTRO));
 
         user.setActivo(0);
         user.setIntentosFallidos(0);
@@ -41,8 +69,83 @@ public class AuthenticationService {
 
         user.setRolList(this.rolEntityRepository.findRolIn(roles));
 
-        return usuarioEntityRepository.save(user);
+        usuarioEntityRepository.save(user);
 
+        ClienteEntity cliente = new ClienteEntity();
+        cliente.setNombre(user.getNombre());
+        cliente.setApellido(user.getApellido());
+        cliente.setCorreo(user.getCorreo());
+        cliente.setCelular(accountDto.getCelular());
+        cliente.setDireccion(accountDto.getDireccion());
+        cliente.setRazonSocial(accountDto.getRazonSocial());
+        cliente.setRuc(accountDto.getRuc());
+        Optional<SegmentoEntity> segmento = segmentoEntityRepository.findById(appConfig.defaultIdSegmento);
+        cliente.setSegmento(segmento.isPresent()?segmento.get():null);
+        Optional<SucursalEntity> sucursal = sucursalEntityRepository.findById(appConfig.defaultIdSucursal);
+        cliente.setSucursal(sucursal.isPresent()?sucursal.get():null);
+        cliente.setUsuario(user);
+
+        return clienteEntityRepository.save(cliente);
+    }
+
+    public UsuarioEntity confirmarRegistro(String check){
+        if(!StringUtils.isEmpty(check)) {
+            try{
+                UsuarioEntity user = findUsuarioByTokenWithPermission(check,EntitiesValues.PERMISO_CONFIRMAR_REGISTRO);
+                user.setLinkDeRecuperacion(null);
+                user.setActivo(EntitiesValues.USUARIO_ACTIVO);
+                user.setBloqueadoHasta(null);
+                user.setIntentosFallidos(0);
+
+                CasillaEntity casilla = new CasillaEntity();
+                casillaEntityRepository.save(casilla);
+                user.getCliente().setCasilla(appConfig.prefixCasilla + String.valueOf(casilla.getNumeroCasilla()));
+
+                usuarioEntityRepository.save(user);
+
+                return user;
+            }catch (Exception e){
+                this.logger.error(e);
+                return null;
+            }
+
+        }
+        return null;
+    }
+
+    private String link(String email, String rol){
+        return Jwts.builder()
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + (appConfig.registerExpiration*1000)))
+                .signWith(SignatureAlgorithm.HS512, appConfig.registerSecret)
+                .claim(Constants.JWT_PERMISSION, rol)
+                .compact();
+    }
+
+    private UsuarioEntity findUsuarioByTokenWithPermission(String token, String permission){
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(appConfig.registerSecret)
+                    .parseClaimsJws(token)
+                    .getBody();
+            if(claims!=null){
+                String email = claims.getSubject();
+                String permissionsStr = claims.get(Constants.JWT_PERMISSION).toString();
+                if (permission.compareTo(permissionsStr) == 0) {
+                    UsuarioEntity user = usuarioEntityRepository.findByLinkDeRecuperacion(token);
+                    if (user != null) {
+                        if (!StringUtils.isAnyEmpty(email, user.getCorreo())) {
+                            if(email.compareTo(user.getCorreo())==0){
+                                return user;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return null;
     }
 
 }

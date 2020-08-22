@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import py.com.buybox.trackingSystem.AppConfig;
+import py.com.buybox.trackingSystem.commons.constants.Constants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,7 +50,7 @@ public class JwtUtil {
 
                 // Hash con el que firmaremos la clave
                 .signWith(SignatureAlgorithm.HS512, appConfig.secret)
-                .claim("permissions", permiso)
+                .claim(Constants.JWT_PERMISSION, permiso)
                 .compact();
 
         //agregamos al encabezado el token
@@ -76,7 +77,7 @@ public class JwtUtil {
                         .parseClaimsJws(token.replace("Bearer", "").trim())
                         .getBody();
                 user = claims.getSubject();
-                String permissionsStr = claims.get("permissions").toString();
+                String permissionsStr = claims.get(Constants.JWT_PERMISSION).toString();
                 logger.debug(permissionsStr);
                 permissions = Arrays.stream(permissionsStr.split("\\|"))
                         .map(SimpleGrantedAuthority::new)

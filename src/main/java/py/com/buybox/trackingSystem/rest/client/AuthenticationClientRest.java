@@ -28,14 +28,14 @@ public class AuthenticationClientRest {
     private AuthenticationService authenticationService;
 
     @PostMapping()
-    @RequestMapping("register")
+    @RequestMapping("new/register")
     public ResponseEntity register(@RequestBody UsuarioDTO usuarioDTO){
         GeneralResponse<UsuarioDTO, Object> r = new GeneralResponse<>();
         UsuarioEntity nuevoUser = null;
 
         if(!StringUtils.isAnyEmpty(usuarioDTO.getNombre(), usuarioDTO.getApellido(), usuarioDTO.getCorreo(), usuarioDTO.getPass())) {
             try {
-                nuevoUser = authenticationService.registerNewUserAccount(usuarioDTO, List.of("CLIENTE"));
+                nuevoUser = authenticationService.registerNewUserAccount(usuarioDTO, List.of("CLIENTE")).getUsuario();
             }catch (DataIntegrityViolationException e){
                 r.setHeader(HeadersCodes.DUPLICATED_USER, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
                 return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
@@ -52,6 +52,23 @@ public class AuthenticationClientRest {
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
-
+    @GetMapping()
+    @RequestMapping("confirmar/register")
+    public ResponseEntity confirmar(@RequestParam String check){
+        GeneralResponse<UsuarioDTO, Object> r = new GeneralResponse<>();
+        if(!StringUtils.isEmpty(check)) {
+            UsuarioEntity u = this.authenticationService.confirmarRegistro(check);
+            if (u != null) {
+                UsuarioDTO uDto = new UsuarioDTO(u);
+                uDto.setCasilla(u.getCliente().getCasilla());
+                this.logger.debug(uDto);
+                r.setBody(uDto);
+                return new ResponseEntity<>(r, HttpStatus.OK);
+            }else{
+                this.logger.debug("Usuario no encontrado al intentar confirmar el registro");
+            }
+        }
+        return new ResponseEntity<>(r, HttpStatus.NOT_FOUND);
+    }
 
 }

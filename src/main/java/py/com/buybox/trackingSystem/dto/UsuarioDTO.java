@@ -19,19 +19,26 @@ public class UsuarioDTO {
     private String linkDeRecuperacion;
     private Calendar linkFechaVencimiento;
     private String pass;
+    private String ruc;
+    private String razonSocial;
+    private String direccion;
+    private String celular;
+    private String casilla;
 
     public UsuarioDTO(UsuarioEntity _user){
-        if(_user.getIdUsuario()!=null){
-            this.idUsuario = _user.getIdUsuario();
+        if(_user!=null) {
+            if (_user.getIdUsuario() != null) {
+                this.idUsuario = _user.getIdUsuario();
+            }
+            this.nombre = _user.getNombre();
+            this.apellido = _user.getApellido();
+            this.correo = _user.getCorreo();
+            this.bloqueadoHasta = _user.getBloqueadoHasta();
+            this.activo = _user.getActivo();
+            this.intentosFallidos = _user.getIntentosFallidos();
+            this.linkDeRecuperacion = _user.getLinkDeRecuperacion();
+            this.linkFechaVencimiento = _user.getLinkFechaVencimiento();
         }
-        this.nombre = _user.getNombre();
-        this.apellido = _user.getApellido();
-        this.correo = _user.getCorreo();
-        this.bloqueadoHasta = _user.getBloqueadoHasta();
-        this.activo = _user.getActivo();
-        this.intentosFallidos = _user.getIntentosFallidos();
-        this.linkDeRecuperacion = _user.getLinkDeRecuperacion();
-        this.linkFechaVencimiento = _user.getLinkFechaVencimiento();
     }
 
     public static UsuarioEntity newEntity(UsuarioDTO _user){
