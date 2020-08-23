@@ -3,7 +3,7 @@ package py.com.buybox.trackingSystem.dto;
 import lombok.Data;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +27,7 @@ public class PaqueteDTO {
     private String codigoInterno;
     private String codigoExterno;
     private Integer idEstado;
-    private Calendar ingreso;
+    private LocalDate ingreso;
     private String destino;
     private String sucursalActual;
     private String casilla;

@@ -66,6 +66,7 @@ public class PaqueteBackOfficeRest {
                     PageRequest.of(currentPage, perPage, Sort.by(SortUtil.sortingList(sorting, "paquetes")))
 
             );
+            logger.debug(pagePaquete);
         }catch (Exception e){
             return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }

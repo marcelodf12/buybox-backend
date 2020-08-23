@@ -52,7 +52,7 @@ public class ClienteEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente")
     private List<PaqueteEntity> paqueteList;
 
-    @OneToOne
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioEntity usuario;
 
