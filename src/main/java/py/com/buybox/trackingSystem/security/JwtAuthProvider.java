@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import py.com.buybox.trackingSystem.commons.constants.EntitiesValues;
 import py.com.buybox.trackingSystem.entities.UsuarioEntity;
 import py.com.buybox.trackingSystem.repository.PermisoEntityRepository;
 import py.com.buybox.trackingSystem.repository.UsuarioEntityRepository;
@@ -45,7 +46,7 @@ public class JwtAuthProvider implements AuthenticationProvider {
         logger.debug(authentication.getCredentials().toString());
         logger.debug(usuario.getPass());
 
-        if (usuario!=null && passwordEncoder.matches(authentication.getCredentials().toString(), usuario.getPass())) {
+        if (usuario!=null && usuario.getActivo()==EntitiesValues.USUARIO_ACTIVO && passwordEncoder.matches(authentication.getCredentials().toString(), usuario.getPass())) {
             List<GrantedAuthority> grantedAuthorityList = permisoEntityRepository.findByUsuario(usuario.getIdUsuario()).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             return new UsernamePasswordAuthenticationToken(
                     name, usuario.getPass(), grantedAuthorityList);
