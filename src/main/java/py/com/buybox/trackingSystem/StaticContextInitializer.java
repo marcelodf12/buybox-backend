@@ -16,9 +16,4 @@ public class StaticContextInitializer {
     @Autowired
     private ApplicationContext context;
 
-    @PostConstruct
-    public void init(){
-        JwtUtil.setAppConfig(appConfig);
-    }
-
 }

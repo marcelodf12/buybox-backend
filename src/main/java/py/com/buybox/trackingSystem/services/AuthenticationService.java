@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import py.com.buybox.trackingSystem.AppConfig;
 import py.com.buybox.trackingSystem.commons.constants.Constants;
 import py.com.buybox.trackingSystem.commons.constants.EntitiesValues;
-import py.com.buybox.trackingSystem.commons.util.RandomUtil;
 import py.com.buybox.trackingSystem.dto.UsuarioDTO;
 import py.com.buybox.trackingSystem.entities.*;
 import py.com.buybox.trackingSystem.repository.*;
@@ -22,7 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Semaphore;
+
 
 @Service
 public class AuthenticationService {

@@ -13,4 +13,5 @@ public class Constants {
     public static final Integer HEADER_CODE_CLIENT_NOT_FOUND = 2;
 
     public static final String JWT_PERMISSION = "permissions";
+    public static final String JWT_CASILLA = "casilla";
 }

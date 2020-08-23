@@ -35,6 +35,9 @@ public class PaqueteClientRest {
     @Autowired
     private PaqueteEntityRepository paqueteEntityRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping()
     public ResponseEntity listarPaquetesRest(
@@ -44,7 +47,7 @@ public class PaqueteClientRest {
         GeneralResponse<List<PaqueteDTO>, Paginable> r = (new GeneralResponse<>());
         Page<PaqueteEntity> pagePaquete = null;
         try {
-            String casilla = JwtUtil.getClaim(token, "casilla");
+            String casilla = jwtUtil.getClaim(token, "casilla");
             logger.debug(casilla);
             if (!StringUtils.isEmpty(casilla)) {
                 pagePaquete = paqueteEntityRepository.findPaquete(

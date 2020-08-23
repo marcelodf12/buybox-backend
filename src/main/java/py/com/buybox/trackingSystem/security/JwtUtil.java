@@ -5,12 +5,16 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 import py.com.buybox.trackingSystem.AppConfig;
 import py.com.buybox.trackingSystem.commons.constants.Constants;
+import py.com.buybox.trackingSystem.entities.UsuarioEntity;
+import py.com.buybox.trackingSystem.repository.UsuarioEntityRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,25 +24,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class JwtUtil {
 
     protected static final Log logger = LogFactory.getLog(JwtUtil.class);
 
-    static AppConfig appConfig;
+    @Autowired
+    private AppConfig appConfig;
+
+    @Autowired
+    private UsuarioEntityRepository usuarioEntityRepository;
 
     // Método para crear el JWT y enviarlo al cliente en el header de la respuesta
-    static void addAuthentication(HttpServletResponse res, String username) {
+    void addAuthentication(HttpServletResponse res, String username, Authentication auth) {
+        logger.debug("addAuthentication(HttpServletResponse res, String username)");
+        String casilla = "";
+        UsuarioEntity usuario = usuarioEntityRepository.findByCorreo(username);
+        if(usuario!=null && usuario.getCliente()!=null && usuario.getCliente().getCasilla()!=null){
+            casilla = usuario.getCliente().getCasilla();
+        }
 
-        logger.debug(appConfig.secret);
-
-        /*
-        ESTO hay que borrar
-        */
-        String permiso = "";
-        if(username.compareTo("admin")==0)
-            permiso = "ROLE_ADMIN";
-        else
-            permiso = "ROLE_EMPLOY";
+        String permiso = auth.getAuthorities().stream().map(grantedAuthority -> grantedAuthority.toString()).collect(Collectors.joining("|"));
 
 
         String token = Jwts.builder()
@@ -51,6 +57,7 @@ public class JwtUtil {
                 // Hash con el que firmaremos la clave
                 .signWith(SignatureAlgorithm.HS512, appConfig.secret)
                 .claim(Constants.JWT_PERMISSION, permiso)
+                .claim(Constants.JWT_CASILLA, casilla)
                 .compact();
 
         //agregamos al encabezado el token
@@ -58,46 +65,48 @@ public class JwtUtil {
     }
 
     // Método para validar el token enviado por el cliente
-    static Authentication getAuthentication(HttpServletRequest request) {
+    Authentication getAuthentication(HttpServletRequest request) {
+        if(request.getServletPath().compareTo("/error")!=0) {
+            logger.debug("request.getServletPath(HttpServletRequest request)");
+            logger.debug(request.getServletPath());
 
-        logger.debug("request.getServletPath()");
-        logger.debug(request.getServletPath());
+            // Obtenemos el token que viene en el encabezado de la peticion
+            String token = request.getHeader("Authorization");
+            logger.debug(token);
 
-        // Obtenemos el token que viene en el encabezado de la peticion
-        String token = request.getHeader("Authorization");
-        logger.debug(token);
-
-        // si hay un token presente, entonces lo validamos
-        if (token != null) {
-            String user;
-            List<GrantedAuthority> permissions = new ArrayList<>();
-            try {
-                Claims claims = Jwts.parser()
-                        .setSigningKey(appConfig.secret)
-                        .parseClaimsJws(token.replace("Bearer", "").trim())
-                        .getBody();
-                user = claims.getSubject();
-                String permissionsStr = claims.get(Constants.JWT_PERMISSION).toString();
-                logger.debug(permissionsStr);
-                permissions = Arrays.stream(permissionsStr.split("\\|"))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-                logger.debug(permissions);
-            }catch (Exception e){
-                logger.error(e);
-                return null;
+            // si hay un token presente, entonces lo validamos
+            if (token != null) {
+                String user;
+                List<GrantedAuthority> permissions = new ArrayList<>();
+                try {
+                    Claims claims = Jwts.parser()
+                            .setSigningKey(appConfig.secret)
+                            .parseClaimsJws(token.replace("Bearer", "").trim())
+                            .getBody();
+                    user = claims.getSubject();
+                    String permissionsStr = claims.get(Constants.JWT_PERMISSION).toString();
+                    logger.debug(permissionsStr);
+                    permissions = Arrays.stream(permissionsStr.split("\\|"))
+                            .map(s -> "ROLE_" + s)
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
+                    logger.debug(permissions);
+                } catch (Exception e) {
+                    logger.error(e);
+                    return null;
+                }
+                // Recordamos que para las demás peticiones que no sean /login
+                // no requerimos una autenticacion por username/password
+                // por este motivo podemos devolver un UsernamePasswordAuthenticationToken sin password
+                return user != null ?
+                        new UsernamePasswordAuthenticationToken(user, null, permissions) :
+                        null;
             }
-            // Recordamos que para las demás peticiones que no sean /login
-            // no requerimos una autenticacion por username/password
-            // por este motivo podemos devolver un UsernamePasswordAuthenticationToken sin password
-            return user != null ?
-                    new UsernamePasswordAuthenticationToken(user, null, permissions) :
-                    null;
         }
         return null;
     }
 
-    public static String getClaim(String token, String claim){
+    public String getClaim(String token, String claim){
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(appConfig.secret)
@@ -110,10 +119,6 @@ public class JwtUtil {
             logger.error(e);
             return null;
         }
-    }
-
-    public static void setAppConfig ( AppConfig _appConfig ) {
-        JwtUtil.appConfig = _appConfig;
     }
 
 }
