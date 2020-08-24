@@ -21,6 +21,8 @@ public class TrackingSystemApplication {
 				registry.addMapping("/**")
 						.allowedOrigins("*")
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+						.allowedHeaders("*")
+						.exposedHeaders("Authorization")
 						.maxAge(3600);
 			}
 
