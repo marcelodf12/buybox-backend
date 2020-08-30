@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import py.com.buybox.trackingSystem.AppConfig;
 import py.com.buybox.trackingSystem.commons.constants.Constants;
 import py.com.buybox.trackingSystem.commons.constants.HeadersCodes;
 import py.com.buybox.trackingSystem.commons.dto.GeneralResponse;
 import py.com.buybox.trackingSystem.dto.UsuarioDTO;
 import py.com.buybox.trackingSystem.entities.UsuarioEntity;
 import py.com.buybox.trackingSystem.services.AuthenticationService;
+import py.com.buybox.trackingSystem.services.SenderMailService;
 
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class AuthenticationClientRest {
             try {
                 nuevoUser = authenticationService.registerNewUserAccount(usuarioDTO, List.of("CLIENTE")).getUsuario();
             }catch (DataIntegrityViolationException e){
-                r.setHeader(HeadersCodes.DUPLICATED_USER, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
+                r.setHeader(HeadersCodes.DUPLICATED_USER, true, Constants.LEVEL_DANGER, Constants.TYPE_TOAST);
                 return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
             }catch (Exception e){
                 return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -45,6 +47,7 @@ public class AuthenticationClientRest {
             UsuarioDTO u = new UsuarioDTO(nuevoUser);
             u.setLinkDeRecuperacion("");
             r.setBody(u);
+            r.setHeader(HeadersCodes.USER_CREATED_SUCCESS,true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
         }else{
             r.setHeader(HeadersCodes.FIELD_MISSING, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
             return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);

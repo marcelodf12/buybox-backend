@@ -34,6 +34,12 @@ public class AppConfig {
     @Value("${prefix.casilla}")
     public String prefixCasilla;
 
+    @Value("${mail.subject.registration}")
+    public String subjectRegister;
+
+    @Value("${mail.text.registration}")
+    public String subjectText;
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();

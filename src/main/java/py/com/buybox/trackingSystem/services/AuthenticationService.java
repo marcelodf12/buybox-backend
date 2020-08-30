@@ -10,17 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 import py.com.buybox.trackingSystem.AppConfig;
 import py.com.buybox.trackingSystem.commons.constants.Constants;
 import py.com.buybox.trackingSystem.commons.constants.EntitiesValues;
 import py.com.buybox.trackingSystem.dto.UsuarioDTO;
 import py.com.buybox.trackingSystem.entities.*;
 import py.com.buybox.trackingSystem.repository.*;
+import org.thymeleaf.context.Context;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 
 
 @Service
@@ -52,7 +54,14 @@ public class AuthenticationService {
     @Autowired
     private AppConfig appConfig;
 
-    public ClienteEntity registerNewUserAccount(UsuarioDTO accountDto, List<String> roles) throws DataIntegrityViolationException {
+    @Autowired
+    private SenderMailService senderMailService;
+
+    @Autowired
+    private TemplateEngine htmlTemplateEngine;
+
+    @Transactional
+    public ClienteEntity registerNewUserAccount(UsuarioDTO accountDto, List<String> roles) throws DataIntegrityViolationException, MessagingException, IOException {
 
         UsuarioEntity user = UsuarioDTO.newEntity(accountDto);
 
@@ -83,6 +92,17 @@ public class AuthenticationService {
         Optional<SucursalEntity> sucursal = sucursalEntityRepository.findById(appConfig.defaultIdSucursal);
         cliente.setSucursal(sucursal.isPresent()?sucursal.get():null);
         cliente.setUsuario(user);
+
+        Locale locale = new Locale("es_ES");
+        final Context ctx = new Context(locale);
+        ctx.setVariable("nombre", user.getNombre());
+        ctx.setVariable("enlace", user.getLinkDeRecuperacion());
+
+        final String htmlContent = this.htmlTemplateEngine.process("confirm-register.html", ctx);
+
+        this.logger.debug(htmlContent);
+
+        senderMailService.sendEmail(appConfig.subjectRegister, htmlContent ,user.getCorreo());
 
         return clienteEntityRepository.save(cliente);
     }

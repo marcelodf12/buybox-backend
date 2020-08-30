@@ -22,6 +22,8 @@ public class GeneralResponse<T, M> implements Serializable {
 
     public GeneralResponse() {
         header = new ResponseHeader();
+        header.setCode(HeadersCodes.GENERAL_SUCCESS);
+        header.setShow(false);
     }
 
     public GeneralResponse(Exception e) {

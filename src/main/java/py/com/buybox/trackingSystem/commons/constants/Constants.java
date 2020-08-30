@@ -3,6 +3,8 @@ package py.com.buybox.trackingSystem.commons.constants;
 public class Constants {
     public static final String LEVEL_SUCCESS = "success";
     public static final String LEVEL_ERROR = "error";
+    public static final String LEVEL_DANGER = "danger";
+    public static final String LEVEL_INFO = "secondary";
     public static final String LEVEL_WARN = "warning";
 
     public static final String TYPE_TOAST = "toast";

@@ -43,9 +43,6 @@ public class JwtAuthProvider implements AuthenticationProvider {
 
         UsuarioEntity usuario = usuarioEntityRepository.findByCorreo(name);
 
-        logger.debug(authentication.getCredentials().toString());
-        logger.debug(usuario.getPass());
-
         if (usuario!=null && usuario.getActivo()==EntitiesValues.USUARIO_ACTIVO && passwordEncoder.matches(authentication.getCredentials().toString(), usuario.getPass())) {
             List<GrantedAuthority> grantedAuthorityList = permisoEntityRepository.findByUsuario(usuario.getIdUsuario()).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             return new UsernamePasswordAuthenticationToken(
