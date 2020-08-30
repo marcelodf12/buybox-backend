@@ -10,6 +10,7 @@ public class HeadersCodes {
     public static final Integer SORTING_MALFORMED = 4001;
     public static final Integer FIELD_MISSING = 4002;
     public static final Integer DUPLICATED_USER = 4003;
+    public static final Integer ENTITY_NOT_EXIST = 4004;
 
     public static final Integer GENERAL_ERROR = 9999;
 
