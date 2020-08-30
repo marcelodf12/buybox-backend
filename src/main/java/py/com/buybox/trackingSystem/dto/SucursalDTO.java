@@ -19,4 +19,6 @@ public class SucursalDTO {
     private String mensajeAlCliente;
     private String mensajeAlClienteFinal;
 
+
+
 }
