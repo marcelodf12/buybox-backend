@@ -1,7 +1,6 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
-import py.com.buybox.trackingSystem.entities.CategoriaEntity;
 import py.com.buybox.trackingSystem.entities.CiudadEntity;
 
 import java.util.List;
@@ -9,14 +8,14 @@ import java.util.stream.Collectors;
 
 @Data
 public class CiudadDTO {
-    private Integer idCiudad;
-    private String nombre;
-    private Integer idDepartamento;
+    private Integer i;
+    private String n;
+    private Integer iD;
 
     public CiudadDTO(CiudadEntity _c){
-        this.idCiudad = _c.getIdCiudad();
-        this.nombre = _c.getNombre();
-        if(_c.getDepartamento()!=null) this.idDepartamento = _c.getDepartamento().getIdDepartamento();
+        this.i = _c.getIdCiudad();
+        this.n = _c.getNombre();
+        if(_c.getDepartamento()!=null) this.iD = _c.getDepartamento().getIdDepartamento();
     }
 
     public static List<CiudadDTO> listFromEntity(List<CiudadEntity> entityList){

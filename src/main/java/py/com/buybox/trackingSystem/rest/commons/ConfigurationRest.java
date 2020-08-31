@@ -13,6 +13,7 @@ import py.com.buybox.trackingSystem.commons.constants.HeadersCodes;
 import py.com.buybox.trackingSystem.commons.dto.GeneralResponse;
 import py.com.buybox.trackingSystem.dto.*;
 import py.com.buybox.trackingSystem.repository.*;
+import py.com.buybox.trackingSystem.services.ConfigurationService;
 
 @RestController
 @RequestMapping("api/v1/commons")
@@ -21,39 +22,13 @@ public class ConfigurationRest {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
-    private EstadoEntityRepository estadoEntityRepository;
-
-    @Autowired
-    private SucursalEntityRepository sucursalEntityRepository;
-
-    @Autowired
-    private CiudadEntityRepository ciudadEntityRepository;
-
-    @Autowired
-    private BarrioEntityRepository barrioEntityRepository;
-
-    @Autowired
-    private DepartamentoEntityRepository departamentoEntityRepository;
-
-    @Autowired
-    private CategoriaEntityRepository categoriaEntityRepository;
-
-    @Autowired
-    private EtiquetaEntityRepository etiquetaEntityRepository;
+    ConfigurationService configurationService;
 
     @GetMapping()
-    @Cacheable("listarConfiguration")
     public ResponseEntity listarConfiguracion(){
         GeneralResponse<ConfigurationDTO, Object> r = (new GeneralResponse<>());
         try {
-            ConfigurationDTO c = new ConfigurationDTO();
-            c.setEstados(EstadoDTO.listFromEntity(estadoEntityRepository.findAll()));
-            c.setSucursales(SucursalMinDTO.listFromEntity(sucursalEntityRepository.findAll()));
-            c.setCiudades(CiudadDTO.listFromEntity(ciudadEntityRepository.findAll()));
-            c.setBarrios(BarrioDTO.listFromEntity(barrioEntityRepository.findAll()));
-            c.setDepartamentos(DepartamentoDTO.listFromEntity(departamentoEntityRepository.findAll()));
-            c.setCategorias(CategoriaDTO.listFromEntity(categoriaEntityRepository.findAll()));
-            c.setEtiquestas(EtiquetaDTO.listFromEntity(etiquetaEntityRepository.findAll()));
+            ConfigurationDTO c = configurationService.listarConfiguracion();
             r.setBody(c);
             r.setHeader(HeadersCodes.GENERAL_SUCCESS,false,"","");
         }catch (Exception e){

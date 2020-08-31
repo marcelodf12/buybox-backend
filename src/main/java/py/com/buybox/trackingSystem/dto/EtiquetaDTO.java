@@ -1,7 +1,6 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
-import py.com.buybox.trackingSystem.entities.EstadoEntity;
 import py.com.buybox.trackingSystem.entities.EtiquetaEntity;
 
 import java.util.List;
@@ -9,15 +8,15 @@ import java.util.stream.Collectors;
 
 @Data
 public class EtiquetaDTO {
-    private String clave;
-    private String valor;
-    private Byte editable;
-    private String contexto;
+    private String k;
+    private String v;
+    private Byte e;
+    private String c;
 
     public EtiquetaDTO(EtiquetaEntity _e){
-        this.clave = _e.getClave();
-        this.valor = _e.getValor();
-        this.contexto = _e.getContexto();
+        this.k = _e.getClave();
+        this.v = _e.getValor();
+        this.c = _e.getContexto();
     }
 
     public static List<EtiquetaDTO> listFromEntity(List<EtiquetaEntity> entityList){

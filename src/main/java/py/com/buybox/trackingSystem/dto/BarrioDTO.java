@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 
 @Data
 public class BarrioDTO {
-    private Integer idBarrio;
-    private String nombre;
-    private Integer idCiudad;
+    private Integer i;
+    private String n;
+    private Integer iC;
 
     public BarrioDTO(BarrioEntity _b){
-        this.idBarrio = _b.getIdBarrio();
-        this.nombre = _b.getNombre();
-        if(_b.getCiudad() != null)this.idCiudad = _b.getCiudad().getIdCiudad();
+        this.i = _b.getIdBarrio();
+        this.n = _b.getNombre();
+        if(_b.getCiudad() != null)this.iC = _b.getCiudad().getIdCiudad();
     }
 
     public static List<BarrioDTO> listFromEntity(List<BarrioEntity> entityList){

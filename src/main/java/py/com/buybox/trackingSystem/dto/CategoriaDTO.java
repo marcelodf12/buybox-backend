@@ -1,7 +1,6 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
-import py.com.buybox.trackingSystem.entities.BarrioEntity;
 import py.com.buybox.trackingSystem.entities.CategoriaEntity;
 
 import java.util.List;
@@ -9,12 +8,12 @@ import java.util.stream.Collectors;
 
 @Data
 public class CategoriaDTO {
-    private Integer idCategoria;
-    private String nombre;
+    private Integer i;
+    private String n;
 
    public CategoriaDTO(CategoriaEntity _c){
-       this.idCategoria = _c.getIdCategoria();
-       this.nombre = _c.getNombre();
+       this.i = _c.getIdCategoria();
+       this.n = _c.getNombre();
    }
 
     public static List<CategoriaDTO> listFromEntity(List<CategoriaEntity> entityList){

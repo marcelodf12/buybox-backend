@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 
 @Data
 public class DepartamentoDTO {
-    private Integer idDepartamento;
-    private String nombre;
+    private Integer i;
+    private String n;
 
     public DepartamentoDTO(DepartamentoEntity _d){
-        this.nombre = _d.getNombre();
-        this.idDepartamento = _d.getIdDepartamento();
+        this.n = _d.getNombre();
+        this.i = _d.getIdDepartamento();
     }
 
     public static List<DepartamentoDTO> listFromEntity(List<DepartamentoEntity> entityList){

@@ -1,7 +1,6 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
-import py.com.buybox.trackingSystem.entities.DepartamentoEntity;
 import py.com.buybox.trackingSystem.entities.EstadoEntity;
 
 import java.util.List;
@@ -9,16 +8,16 @@ import java.util.stream.Collectors;
 
 @Data
 public class EstadoDTO {
-    private Integer idEstado;
-    private String estado;
-    private String etiqueta;
-    private String color;
+    private Integer i;
+    private String s;
+    private String e;
+    private String c;
 
     public EstadoDTO(EstadoEntity _e){
-        this.idEstado = _e.getIdEstado();
-        this.estado = _e.getEstado();
-        this.etiqueta = _e.getEtiqueta();
-        this.color = _e.getColor();
+        this.i = _e.getIdEstado();
+        this.s = _e.getEstado();
+        this.e = _e.getEtiqueta();
+        this.c = _e.getColor();
     }
 
     public static List<EstadoDTO> listFromEntity(List<EstadoEntity> entityList){
