@@ -1,5 +1,6 @@
 package py.com.buybox.trackingSystem.rest.client;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,9 @@ public class ProfileClientRest {
         String casilla = jwtUtil.getClaim(token, "casilla");
         ClienteEntity clienteEntity = null;
         try {
-            clienteEntity = clienteEntityRepository.findByCasilla(casilla);
+            if(!StringUtils.isEmpty(casilla)) {
+                clienteEntity = clienteEntityRepository.findByCasilla(casilla);
+            }
         }catch (Exception e){
             return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }

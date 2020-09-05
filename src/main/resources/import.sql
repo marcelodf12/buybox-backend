@@ -14,11 +14,11 @@ INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 3);
 INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 3);
 
 /* ESTADOS */
-INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (1, 'nuevo', 'Nuevo', 'fff');
-INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (2, 'transito', 'En tránsito', 'fff');
-INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (3, 'sucursal', 'Listo para retiro', 'fff');
-INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (4, 'retirado', 'Retirado', 'fff');
-INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (5, 'delivery', 'Delivery', 'fff');
+INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (1, 'nuevo', 'Nuevo', '#FEB205');
+INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (2, 'transito', 'En tránsito', '#FEB205');
+INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (3, 'sucursal', 'Listo para retiro', '#6BBA00');
+INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (4, 'retirado', 'Retirado', '#949494');
+INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (5, 'delivery', 'Delivery', '#6BBA00');
 
 /* SUCURSALES */
 INSERT INTO bb_sucursal (id_sucursal, nombre, id_departamento, id_ciudad, id_barrio, latitud, longitud, rastreable, id_estado_defecto, editable, notificable_llegada, notificable_final, mensaje_al_cliente, mensaje_al_cliente_final) VALUES (1, 'Deposito Miami', null, null, null, -25374419, -57516586, 1, 1, 0, 0, 0, null, null);

@@ -50,7 +50,7 @@ public class PaqueteClientRest {
             String casilla = jwtUtil.getClaim(token, "casilla");
             logger.debug(casilla);
             if (!StringUtils.isEmpty(casilla)) {
-                pagePaquete = paqueteEntityRepository.findPaquete(
+                pagePaquete = paqueteEntityRepository.findPaqueteByCasilla(
                         "",
                         "",
                         "",
@@ -65,7 +65,7 @@ public class PaqueteClientRest {
         }catch (Exception e){
             return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if(pagePaquete!=null || pagePaquete.isEmpty()){
+        if(pagePaquete!=null && !pagePaquete.isEmpty()){
             List<PaqueteDTO> paquetes = PaqueteDTO.listFromEntity(pagePaquete.toList());
             r.setBody(paquetes);
             r.setMeta(new Paginable(pagePaquete));
