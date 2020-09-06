@@ -17,9 +17,11 @@ import py.com.buybox.trackingSystem.dto.PaqueteImportDto;
 import py.com.buybox.trackingSystem.entities.ClienteEntity;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.entities.SegmentoEntity;
+import py.com.buybox.trackingSystem.entities.SucursalEntity;
 import py.com.buybox.trackingSystem.repository.ClienteEntityRepository;
 import py.com.buybox.trackingSystem.repository.PaqueteEntityRepository;
 import py.com.buybox.trackingSystem.repository.SegmentoEntityRepository;
+import py.com.buybox.trackingSystem.repository.SucursalEntityRepository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,6 +44,9 @@ public class PaqueteImportService {
     private SegmentoEntityRepository segmentoEntityRepository;
 
     @Autowired
+    private SucursalEntityRepository sucursalEntityRepository;
+
+    @Autowired
     private AppConfig appConfig;
 
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -50,6 +55,8 @@ public class PaqueteImportService {
         List<PaqueteImportDto> lista = new ArrayList<>();
         try {
             Optional<SegmentoEntity> segmentoDefault = segmentoEntityRepository.findById(appConfig.defaultIdSegmento);
+            Optional<SucursalEntity> sucursalDestinoDefault = sucursalEntityRepository.findById(appConfig.defaultIdSucursalDestino);
+            Optional<SucursalEntity> sucursalOrigenDefault = sucursalEntityRepository.findById(appConfig.defaultIdSucursalOrigen);
             FileInputStream f = (FileInputStream) file.getInputStream();
             XSSFWorkbook libro = new XSSFWorkbook(f);
             XSSFSheet hoja = libro.getSheet("Parcel Cube");
@@ -62,7 +69,7 @@ public class PaqueteImportService {
                         Row row = rowIterator.next();
                         fila++;
                         if (fila >= 8) {
-                            PaqueteImportDto p = procesarLinea(row, fila, segmentoDefault.get());
+                            PaqueteImportDto p = procesarLinea(row, fila, segmentoDefault.get(), sucursalDestinoDefault.get(), sucursalOrigenDefault.get());
                             if(p!=null)
                                 lista.add(p);
                         }
@@ -75,7 +82,7 @@ public class PaqueteImportService {
         return lista;
     }
 
-    private PaqueteImportDto procesarLinea(Row row, int fila, SegmentoEntity segmentoDefault){
+    private PaqueteImportDto procesarLinea(Row row, int fila, SegmentoEntity segmentoDefault, SucursalEntity sucursalDestinoDefault, SucursalEntity sucursalOrigenDefault){
         this.logger.debug(" <--------------- Procesando fila="+fila+" ---------------> ");
         PaqueteImportDto paqueteLinea = new PaqueteImportDto();
         PaqueteEntity p = new PaqueteEntity();
@@ -135,19 +142,47 @@ public class PaqueteImportService {
                     PaqueteEntity pAnt = paqueteEntityRepository.findByNumeroTracking(p.getNumeroTracking());
                     ClienteEntity cliente = clienteEntityRepository.findByCasilla(p.getCodigoExterno());
                     this.setearPrecio(p, pAnt, cliente, segmentoDefault);
+                    p.setCliente(cliente);
                     if (pAnt != null) {
+                        pAnt.setCliente(cliente);
+                        pAnt.setIngreso(p.getIngreso());
+                        pAnt.setLongitud(p.getLongitud());
+                        pAnt.setAncho(p.getAncho());
+                        pAnt.setAltura(p.getAltura());
+                        pAnt.setVolumen(p.getVolumen());
+                        pAnt.setPeso(p.getPeso());
+                        pAnt.setVuelo(p.getVuelo());
+                        pAnt.setCodigoExterno(p.getCodigoExterno());
+                        pAnt.setDescripcion(p.getDescripcion());
+                        pAnt.setPrecio(p.getPrecio());
+                        if(pAnt.getCliente()!=null && cliente!=null && cliente.getIdCliente()!=pAnt.getCliente().getIdCliente()){
+                            pAnt.setAutorizadoDocumento(null);
+                            pAnt.setAutorizadoNombre(null);
+                        }
+                        p.setIngreso(pAnt.getIngreso());
+                        paqueteEntityRepository.save(pAnt);
                         paqueteLinea.setP(new PaqueteDTO(pAnt));
                         paqueteLinea.setResult(1);
                     } else {
-                        p.setCliente(cliente);
+                        p.setSucursalActual(sucursalOrigenDefault);
+                        if (cliente!=null && cliente.getSucursal()!=null ){
+                            p.setSucursalDestino(cliente.getSucursal());
+                        }else{
+                            p.setSucursalDestino(sucursalDestinoDefault);
+                        }
+                        p.setEstado(p.getSucursalActual().getEstadoDefecto());
+                        paqueteEntityRepository.save(p);
                         paqueteLinea.setP(new PaqueteDTO(p));
                         paqueteLinea.setResult(0);
                     }
+
+
                 }else{
                     return null;
                 }
             }
         }catch (Exception e){
+            this.logger.error("Error al procesar fila="+fila, e);
             paqueteLinea.setResult(-1);
         }
         return paqueteLinea;
@@ -155,7 +190,7 @@ public class PaqueteImportService {
 
     private void setearPrecio(PaqueteEntity p, PaqueteEntity pAnt, ClienteEntity cliente, SegmentoEntity segmentoDefault){
         String formula;
-        if(cliente!=null){
+        if(cliente!=null && cliente.getSegmento()!= null && cliente.getSegmento().getPrecio()!=null){
             formula = cliente.getSegmento().getPrecio().getFormula();
         }else{
             formula = segmentoDefault.getPrecio().getFormula();

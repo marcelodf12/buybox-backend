@@ -28,8 +28,11 @@ public class AppConfig {
     @Value("${default.segmento}")
     public Integer defaultIdSegmento;
 
-    @Value("${default.sucursal}")
-    public Integer defaultIdSucursal;
+    @Value("${default.sucursal.destino}")
+    public Integer defaultIdSucursalDestino;
+
+    @Value("${default.sucursal.origen}")
+    public Integer defaultIdSucursalOrigen;
 
     @Value("${prefix.casilla}")
     public String prefixCasilla;

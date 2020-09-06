@@ -89,7 +89,7 @@ public class AuthenticationService {
         cliente.setRuc(accountDto.getRuc());
         Optional<SegmentoEntity> segmento = segmentoEntityRepository.findById(appConfig.defaultIdSegmento);
         cliente.setSegmento(segmento.isPresent()?segmento.get():null);
-        Optional<SucursalEntity> sucursal = sucursalEntityRepository.findById(appConfig.defaultIdSucursal);
+        Optional<SucursalEntity> sucursal = sucursalEntityRepository.findById(appConfig.defaultIdSucursalDestino);
         cliente.setSucursal(sucursal.isPresent()?sucursal.get():null);
         cliente.setUsuario(user);
 
