@@ -31,6 +31,7 @@ public class PaqueteDTO {
     private String destino;
     private String sucursalActual;
     private String casilla;
+    private Integer updated;
 
     public PaqueteDTO(PaqueteEntity paqueteEntity){
         this.idPaquete=paqueteEntity.getIdPaquete();

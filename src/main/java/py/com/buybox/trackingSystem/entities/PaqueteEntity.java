@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.List;
 
 @Table(name = "bb_paquete")
@@ -62,7 +61,7 @@ public class PaqueteEntity implements Serializable {
     @Column(name = "monto_total")
     private Long montoTotal;
 
-    @Column(name = "numero_tracking")
+    @Column(name = "numero_tracking", unique = true)
     private String numeroTracking;
 
     @Column(name = "peso")

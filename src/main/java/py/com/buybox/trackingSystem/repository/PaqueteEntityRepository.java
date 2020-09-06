@@ -40,23 +40,11 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
             "JOIN P.cliente bc\n" +
             "JOIN P.sucursalDestino s\n" +
             "WHERE\n" +
-            "    UPPER(P.codigoExterno) like UPPER(CONCAT('%', ?1, '%')) AND\n" +
-            "    UPPER(P.codigoInterno) like UPPER(CONCAT('%', ?2, '%')) AND\n" +
-            "    UPPER(P.numeroTracking) like UPPER(CONCAT('%', ?8, '%')) AND\n" +
-            "    UPPER(CONCAT(bc.nombre, ' ' , bc.apellido)) like UPPER(CONCAT('%', ?9, '%')) AND\n" +
-            "    UPPER(P.vuelo) like UPPER(CONCAT('%', ?3, '%')) AND\n" +
-            "    bc.casilla = ?4 AND\n" +
-            "    P.sucursalActual.id = coalesce(?5, P.sucursalActual.id) AND\n" +
-            "    P.ingreso >= ?6 AND P.ingreso <= ?7\n")
-    Page<PaqueteEntity> findPaqueteByCasilla(String codigoExterno,
-                                    String codigoInterno,
-                                    String vuelo,
+            "    bc.casilla = ?1 ")
+    Page<PaqueteEntity> findPaqueteByCasilla(
                                     String casilla,
-                                    Integer idSucursal,
-                                    LocalDate desde,
-                                    LocalDate hasta,
-                                    String numeroTracking,
-                                    String cliente,
                                     PageRequest pageRequest
     );
+
+    PaqueteEntity findByNumeroTracking(String numeroTracking);
 }

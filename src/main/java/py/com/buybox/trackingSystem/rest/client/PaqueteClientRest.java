@@ -51,15 +51,7 @@ public class PaqueteClientRest {
             logger.debug(casilla);
             if (!StringUtils.isEmpty(casilla)) {
                 pagePaquete = paqueteEntityRepository.findPaqueteByCasilla(
-                        "",
-                        "",
-                        "",
                         casilla,
-                        null,
-                        LocalDate.of(1999, 1, 1),
-                        LocalDate.of(2050, 1, 1),
-                        "",
-                        "",
                         PageRequest.of(currentPage, 10, Sort.by(SortUtil.sortingList("-ingreso", "paquetes"))));
             }
         }catch (Exception e){

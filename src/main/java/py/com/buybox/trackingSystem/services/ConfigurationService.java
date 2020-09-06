@@ -4,11 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import py.com.buybox.trackingSystem.commons.constants.HeadersCodes;
-import py.com.buybox.trackingSystem.commons.dto.GeneralResponse;
 import py.com.buybox.trackingSystem.dto.*;
 import py.com.buybox.trackingSystem.repository.*;
 

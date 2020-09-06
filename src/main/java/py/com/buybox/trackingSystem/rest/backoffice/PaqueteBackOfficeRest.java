@@ -11,12 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import py.com.buybox.trackingSystem.commons.dto.GeneralResponse;
 import py.com.buybox.trackingSystem.commons.dto.Paginable;
 import py.com.buybox.trackingSystem.commons.util.SortUtil;
 import py.com.buybox.trackingSystem.dto.PaqueteDTO;
+import py.com.buybox.trackingSystem.dto.PaqueteImportDto;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.repository.PaqueteEntityRepository;
+import py.com.buybox.trackingSystem.services.PaqueteImportService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +33,9 @@ public class PaqueteBackOfficeRest {
 
     @Autowired
     private PaqueteEntityRepository paqueteEntityRepository;
+
+    @Autowired
+    private PaqueteImportService paqueteImportService;
 
     @PreAuthorize("hasRole('LIST_PAQUETE')")
     @GetMapping()
@@ -58,7 +64,7 @@ public class PaqueteBackOfficeRest {
                     casilla,
                     idSucursal,
                     desde,
-                    hasta,
+                    hasta.plusDays(1),
                     numeroTracking,
                     cliente,
                     PageRequest.of(currentPage, perPage, Sort.by(SortUtil.sortingList(sorting, "paquetes")))
@@ -71,6 +77,15 @@ public class PaqueteBackOfficeRest {
         List<PaqueteDTO> paquetes = PaqueteDTO.listFromEntity(pagePaquete.toList());
         r.setBody(paquetes);
         r.setMeta(new Paginable(pagePaquete));
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @PostMapping("import")
+    @PreAuthorize("hasRole('ALTA_PAQUETE')")
+    public ResponseEntity importarPaquetesRest(@RequestParam("file") MultipartFile file){
+        GeneralResponse<List<PaqueteImportDto>, Paginable> r = (new GeneralResponse<>());
+        List<PaqueteImportDto> paquetes = this.paqueteImportService.preImport(file);
+        r.setBody(paquetes);
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
