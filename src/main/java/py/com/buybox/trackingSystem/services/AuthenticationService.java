@@ -100,7 +100,7 @@ public class AuthenticationService {
 
         final String htmlContent = this.htmlTemplateEngine.process("confirm-register.html", ctx);
 
-        this.logger.debug(htmlContent);
+        this.logger.info(user.getLinkDeRecuperacion());
 
         senderMailService.sendEmail(appConfig.subjectRegister, htmlContent ,user.getCorreo());
 
