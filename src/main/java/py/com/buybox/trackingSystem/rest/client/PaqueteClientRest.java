@@ -24,6 +24,7 @@ import py.com.buybox.trackingSystem.security.JwtUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -65,6 +66,39 @@ public class PaqueteClientRest {
             r.setBody(new ArrayList<>());
             r.setHeader(HeadersCodes.CLIENTE_SIN_PAQUETES, true, Constants.LEVEL_WARN, Constants.TYPE_TOAST);
             return new ResponseEntity<>(r, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("{id}")
+    public ResponseEntity rastreoPaquete(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("id") Integer idPaquete
+    ){
+        GeneralResponse<PaqueteDTO, Paginable> r = (new GeneralResponse<>());
+        Optional<PaqueteEntity> paquete;
+        PaqueteDTO paqueteDTO = null;
+        try {
+            String casilla = jwtUtil.getClaim(token, "casilla");
+            logger.debug(casilla);
+            if (!StringUtils.isEmpty(casilla)) {
+                paquete = paqueteEntityRepository.findById(idPaquete);
+                if(paquete.get()!=null){
+                    paqueteDTO = new PaqueteDTO(paquete.get(), paquete.get().getRastreoList());
+                    if(casilla.compareTo(paqueteDTO.getCasilla())!=0){
+                        paqueteDTO = null;
+                    }
+                }
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if(paqueteDTO!=null){
+            r.setBody(paqueteDTO);
+        }else{
+            r.setHeader(HeadersCodes.ENTITY_NOT_EXIST, true, Constants.LEVEL_WARN, Constants.TYPE_TOAST);
+            return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(r, HttpStatus.OK);
     }

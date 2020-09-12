@@ -2,8 +2,10 @@ package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
+import py.com.buybox.trackingSystem.entities.RastreoEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,7 @@ public class PaqueteDTO {
     private String sucursalActual;
     private String casilla;
     private Integer updated;
+    private List<RastreoDTO> rastreo;
 
     public PaqueteDTO(PaqueteEntity paqueteEntity){
         this.idPaquete=paqueteEntity.getIdPaquete();
@@ -63,6 +66,14 @@ public class PaqueteDTO {
         }
         if(paqueteEntity.getSucursalActual()!=null){
             this.sucursalActual=paqueteEntity.getSucursalActual().getNombre();
+        }
+    }
+
+    public PaqueteDTO(PaqueteEntity paqueteEntity, List<RastreoEntity> rastreoEntityList){
+        this(paqueteEntity);
+        this.rastreo = new ArrayList<>();
+        for(RastreoEntity r: rastreoEntityList){
+            this.rastreo.add(new RastreoDTO(r));
         }
     }
 
