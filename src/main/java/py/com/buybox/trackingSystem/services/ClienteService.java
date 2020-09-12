@@ -57,6 +57,14 @@ public class ClienteService {
             if(sucursalEntity.get()!=null)
                 clienteEntity.setSucursal(sucursalEntity.get());
         }
+
+        if(clienteEntity.getUsuario()!=null){
+            if(clienteDTO.getNombre()!=null)
+                clienteEntity.getUsuario().setNombre(clienteDTO.getNombre());
+
+            if(clienteDTO.getApellido()!=null)
+                clienteEntity.getUsuario().setApellido(clienteDTO.getApellido());
+        }
         return clienteEntityRepository.save(clienteEntity);
     }
 }
