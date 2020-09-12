@@ -1,5 +1,7 @@
     package py.com.buybox.trackingSystem.services;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
+    protected final Log logger = LogFactory.getLog(this.getClass());
+
     @Autowired
     private ClienteEntityRepository clienteEntityRepository;
 
@@ -25,6 +29,8 @@ public class ClienteService {
 
     public ClienteEntity edit(ClienteDTO clienteDTO, String casilla){
         ClienteEntity clienteEntity = clienteEntityRepository.findByCasilla(casilla);
+        logger.debug("Edit cliente: ");
+        logger.debug(new ClienteDTO(clienteEntity));
         if(clienteDTO.getNombre()!=null)
             clienteEntity.setNombre(clienteDTO.getNombre());
 

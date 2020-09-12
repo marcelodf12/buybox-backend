@@ -11,11 +11,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import py.com.buybox.trackingSystem.AppConfig;
 import py.com.buybox.trackingSystem.commons.constants.EntitiesValues;
 import py.com.buybox.trackingSystem.entities.UsuarioEntity;
 import py.com.buybox.trackingSystem.repository.PermisoEntityRepository;
 import py.com.buybox.trackingSystem.repository.UsuarioEntityRepository;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,9 @@ public class JwtAuthProvider implements AuthenticationProvider {
     PermisoEntityRepository permisoEntityRepository;
 
     @Autowired
+    AppConfig appConfig;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -43,11 +48,30 @@ public class JwtAuthProvider implements AuthenticationProvider {
 
         UsuarioEntity usuario = usuarioEntityRepository.findByCorreo(name);
 
-        if (usuario!=null && usuario.getActivo()==EntitiesValues.USUARIO_ACTIVO && passwordEncoder.matches(authentication.getCredentials().toString(), usuario.getPass())) {
+        Calendar cal = Calendar.getInstance();
+
+        if (    usuario!=null &&
+                usuario.getActivo()==EntitiesValues.USUARIO_ACTIVO &&
+                passwordEncoder.matches(authentication.getCredentials().toString(), usuario.getPass()) &&
+                (usuario.getBloqueadoHasta()==null || cal.after(usuario.getBloqueadoHasta()))
+        ) {
             List<GrantedAuthority> grantedAuthorityList = permisoEntityRepository.findByUsuario(usuario.getIdUsuario()).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            usuario.setIntentosFallidos(0);
+            usuario.setBloqueadoHasta(null);
+            usuarioEntityRepository.save(usuario);
             return new UsernamePasswordAuthenticationToken(
                     name, usuario.getPass(), grantedAuthorityList);
         } else {
+            if(usuario!=null){
+                usuario.setIntentosFallidos(usuario.getIntentosFallidos()+1);
+                logger.debug("Login failed: Intentos=" + usuario.getIntentosFallidos() + " AppConfigIntentos=" + appConfig.loginIntentos );
+                if(usuario.getIntentosFallidos()>=appConfig.loginIntentos){
+                    cal.add(Calendar.MINUTE, appConfig.blockMin);
+                    usuario.setBloqueadoHasta(cal);
+                    usuario.setIntentosFallidos(0);
+                }
+                usuarioEntityRepository.save(usuario);
+            }
             return null;
         }
     }

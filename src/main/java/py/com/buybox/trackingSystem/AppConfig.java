@@ -25,6 +25,12 @@ public class AppConfig {
     @Value("${register.secret}")
     public String registerSecret;
 
+    @Value("${user.login.intentos}")
+    public Integer loginIntentos;
+
+    @Value("${user.login.block.min}")
+    public Integer blockMin;
+
     @Value("${default.segmento}")
     public Integer defaultIdSegmento;
 

@@ -21,16 +21,18 @@ public class ClienteDTO {
     private String pass;
 
     public ClienteDTO(ClienteEntity _client){
-        this.idCliente = _client.getIdCliente();
-        this.nombre = _client.getNombre();
-        this.apellido = _client.getApellido();
-        this.correo = _client.getCorreo();
-        this.celular = _client.getCelular();
-        this.razonSocial = _client.getCelular();
-        this.ruc = _client.getRuc();
-        this.direccion = _client.getDireccion();
-        this.casilla = _client.getCasilla();
-        if(_client.getSucursal()!=null)
-            this.idSucursal = _client.getSucursal().getIdSucursal();
+        if(_client!=null) {
+            this.idCliente = _client.getIdCliente();
+            this.nombre = _client.getNombre();
+            this.apellido = _client.getApellido();
+            this.correo = _client.getCorreo();
+            this.celular = _client.getCelular();
+            this.razonSocial = _client.getCelular();
+            this.ruc = _client.getRuc();
+            this.direccion = _client.getDireccion();
+            this.casilla = _client.getCasilla();
+            if (_client.getSucursal() != null)
+                this.idSucursal = _client.getSucursal().getIdSucursal();
+        }
     }
 }
