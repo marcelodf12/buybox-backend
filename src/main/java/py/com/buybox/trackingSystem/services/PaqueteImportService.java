@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import py.com.buybox.trackingSystem.AppConfig;
+import py.com.buybox.trackingSystem.commons.util.RandomUtil;
 import py.com.buybox.trackingSystem.dto.PaqueteDTO;
 import py.com.buybox.trackingSystem.dto.PaqueteImportDto;
 import py.com.buybox.trackingSystem.entities.ClienteEntity;
@@ -139,6 +140,7 @@ public class PaqueteImportService {
                 }
                 if (p.getAltura() != null || p.getAncho() != null || p.getLongitud() != null || !agente.isEmpty() || !casilla.isEmpty()) {
                     p.setCodigoExterno(agente + casilla);
+                    p.setCodigoInterno(RandomUtil.stringRandomWithoutSymbols(32));
                     PaqueteEntity pAnt = paqueteEntityRepository.findByNumeroTracking(p.getNumeroTracking());
                     ClienteEntity cliente = clienteEntityRepository.findByCasilla(p.getCodigoExterno());
                     this.setearPrecio(p, pAnt, cliente, segmentoDefault);
