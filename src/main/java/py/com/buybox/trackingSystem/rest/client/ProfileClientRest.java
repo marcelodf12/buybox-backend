@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import py.com.buybox.trackingSystem.commons.constants.Constants;
 import py.com.buybox.trackingSystem.commons.constants.HeadersCodes;
 import py.com.buybox.trackingSystem.commons.dto.GeneralResponse;
@@ -18,8 +15,7 @@ import py.com.buybox.trackingSystem.dto.ClienteDTO;
 import py.com.buybox.trackingSystem.entities.ClienteEntity;
 import py.com.buybox.trackingSystem.repository.ClienteEntityRepository;
 import py.com.buybox.trackingSystem.security.JwtUtil;
-
-import java.util.ArrayList;
+import py.com.buybox.trackingSystem.services.ClienteService;
 
 @RestController
 @RequestMapping("api/v1/client/perfil")
@@ -32,6 +28,9 @@ public class ProfileClientRest {
 
     @Autowired
     private ClienteEntityRepository clienteEntityRepository;
+
+    @Autowired
+    private ClienteService clienteService;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping()
@@ -55,6 +54,29 @@ public class ProfileClientRest {
             r.setHeader(HeadersCodes.ENTITY_NOT_EXIST, true, Constants.LEVEL_WARN, Constants.TYPE_TOAST);
             return new ResponseEntity<>(r, HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @PutMapping()
+    public ResponseEntity editarClient(
+            @RequestHeader("Authorization") String token,
+            @RequestBody ClienteDTO cliente
+    ){
+        GeneralResponse<ClienteDTO, Object> r = (new GeneralResponse<>());
+        String casilla = jwtUtil.getClaim(token, "casilla");
+        ClienteEntity clienteEntity = null;
+        try {
+            if(!StringUtils.isEmpty(casilla)) {
+                clienteEntity = clienteService.edit(cliente, casilla);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        r.setHeader(HeadersCodes.GENERAL_SUCCESS, false, "", "");
+        r.setBody(new ClienteDTO(clienteEntity));
+
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 }

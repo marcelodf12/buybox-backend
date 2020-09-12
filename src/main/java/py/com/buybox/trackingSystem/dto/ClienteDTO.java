@@ -1,9 +1,11 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import py.com.buybox.trackingSystem.entities.ClienteEntity;
 
 @Data
+@NoArgsConstructor
 public class ClienteDTO {
     private Integer idCliente;
     private String nombre;
@@ -15,6 +17,8 @@ public class ClienteDTO {
     private String direccion;
     private Integer idSegmento;
     private String casilla;
+    private Integer idSucursal;
+    private String pass;
 
     public ClienteDTO(ClienteEntity _client){
         this.idCliente = _client.getIdCliente();
@@ -26,5 +30,7 @@ public class ClienteDTO {
         this.ruc = _client.getRuc();
         this.direccion = _client.getDireccion();
         this.casilla = _client.getCasilla();
+        if(_client.getSucursal()!=null)
+            this.idSucursal = _client.getSucursal().getIdSucursal();
     }
 }
