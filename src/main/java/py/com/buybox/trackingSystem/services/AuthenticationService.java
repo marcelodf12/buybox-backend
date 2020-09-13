@@ -69,6 +69,7 @@ public class AuthenticationService {
                 user.setLinkDeRecuperacion(null);
                 user.setBloqueadoHasta(null);
                 user.setIntentosFallidos(0);
+                user.setActivo(EntitiesValues.USUARIO_ACTIVO);
                 return usuarioEntityRepository.save(user);
             }
         }catch (Exception e){
@@ -80,9 +81,11 @@ public class AuthenticationService {
     @Transactional
     public UsuarioEntity generateRecovery(UsuarioDTO usuario) throws IOException, MessagingException {
         UsuarioEntity user = usuarioEntityRepository.findByCorreo(usuario.getCorreo());
-        generarLink(user, EntitiesValues.PERMISO_RECUPERAR_PASS);
-        usuarioEntityRepository.save(user);
-        enviarCorreo(user, appConfig.subjectRecovery, "recovery-user.html");
+        if(user!=null) {
+            generarLink(user, EntitiesValues.PERMISO_RECUPERAR_PASS);
+            usuarioEntityRepository.save(user);
+            enviarCorreo(user, appConfig.subjectRecovery, "recovery-user.html");
+        }
         return user;
     };
 
