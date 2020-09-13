@@ -61,15 +61,37 @@ public class AuthenticationService {
     private TemplateEngine htmlTemplateEngine;
 
     @Transactional
+    public UsuarioEntity recovery(UsuarioDTO usuario){
+        try {
+            UsuarioEntity user = findUsuarioByTokenWithPermission(usuario.getLinkDeRecuperacion(),EntitiesValues.PERMISO_RECUPERAR_PASS);
+            if(user!=null && user.getCorreo().compareTo(usuario.getCorreo())==0){
+                user.setPass(passwordEncoder.encode(usuario.getPass()));
+                user.setLinkDeRecuperacion(null);
+                user.setBloqueadoHasta(null);
+                user.setIntentosFallidos(0);
+                return usuarioEntityRepository.save(user);
+            }
+        }catch (Exception e){
+            logger.error(e);
+        }
+        return null;
+    };
+
+    @Transactional
+    public UsuarioEntity generateRecovery(UsuarioDTO usuario) throws IOException, MessagingException {
+        UsuarioEntity user = usuarioEntityRepository.findByCorreo(usuario.getCorreo());
+        generarLink(user, EntitiesValues.PERMISO_RECUPERAR_PASS);
+        usuarioEntityRepository.save(user);
+        enviarCorreo(user, appConfig.subjectRecovery, "recovery-user.html");
+        return user;
+    };
+
+    @Transactional
     public ClienteEntity registerNewUserAccount(UsuarioDTO accountDto, List<String> roles) throws DataIntegrityViolationException, MessagingException, IOException {
 
         UsuarioEntity user = UsuarioDTO.newEntity(accountDto);
 
-        Calendar vencimiento = Calendar.getInstance();
-        vencimiento.add(Calendar.SECOND, appConfig.registerExpiration*1000);
-        user.setLinkFechaVencimiento(vencimiento);
-
-        user.setLinkDeRecuperacion(link(accountDto.getCorreo(), EntitiesValues.PERMISO_CONFIRMAR_REGISTRO));
+        generarLink(user, EntitiesValues.PERMISO_CONFIRMAR_REGISTRO);
 
         user.setActivo(EntitiesValues.USUARIO_CREADO);
         user.setIntentosFallidos(0);
@@ -93,16 +115,7 @@ public class AuthenticationService {
         cliente.setSucursal(sucursal.isPresent()?sucursal.get():null);
         cliente.setUsuario(user);
 
-        Locale locale = new Locale("es_ES");
-        final Context ctx = new Context(locale);
-        ctx.setVariable("nombre", user.getNombre());
-        ctx.setVariable("enlace", user.getLinkDeRecuperacion());
-
-        final String htmlContent = this.htmlTemplateEngine.process("confirm-register.html", ctx);
-
-        this.logger.info(user.getLinkDeRecuperacion());
-
-        senderMailService.sendEmail(appConfig.subjectRegister, htmlContent ,user.getCorreo());
+        enviarCorreo(user, appConfig.subjectRegister, "confirm-register.html");
 
         return clienteEntityRepository.save(cliente);
     }
@@ -118,7 +131,7 @@ public class AuthenticationService {
 
                 CasillaEntity casilla = new CasillaEntity();
                 casillaEntityRepository.save(casilla);
-                user.getCliente().setCasilla(appConfig.prefixCasilla + String.valueOf(casilla.getNumeroCasilla()));
+                user.getCliente().setCasilla(appConfig.prefixCasilla + casilla.getNumeroCasilla());
 
                 usuarioEntityRepository.save(user);
 
@@ -165,6 +178,27 @@ public class AuthenticationService {
 
         }
         return null;
+    }
+
+    private void generarLink(UsuarioEntity user, String permiso){
+        Calendar vencimiento = Calendar.getInstance();
+        vencimiento.add(Calendar.SECOND, appConfig.registerExpiration);
+        user.setLinkFechaVencimiento(vencimiento);
+
+        user.setLinkDeRecuperacion(link(user.getCorreo(), permiso));
+    }
+
+    private void enviarCorreo(UsuarioEntity user, String subject, String templateName) throws IOException, MessagingException {
+        Locale locale = new Locale("es_ES");
+        final Context ctx = new Context(locale);
+        ctx.setVariable("nombre", user.getNombre() + user.getApellido());
+        ctx.setVariable("enlace", user.getLinkDeRecuperacion());
+
+        final String htmlContent = this.htmlTemplateEngine.process(templateName, ctx);
+
+        this.logger.info(user.getLinkDeRecuperacion());
+
+        senderMailService.sendEmail(subject, htmlContent ,user.getCorreo());
     }
 
 }

@@ -46,8 +46,9 @@ public class AppConfig {
     @Value("${mail.subject.registration}")
     public String subjectRegister;
 
-    @Value("${mail.text.registration}")
-    public String subjectText;
+    @Value("${mail.subject.recovery}")
+    public String subjectRecovery;
+
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {

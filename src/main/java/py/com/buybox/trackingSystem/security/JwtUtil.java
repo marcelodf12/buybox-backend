@@ -121,4 +121,19 @@ public class JwtUtil {
         }
     }
 
+    public String getSubject(String token){
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(appConfig.secret)
+                    .parseClaimsJws(token.replace("Bearer", "").trim())
+                    .getBody();
+            String sub = claims.getSubject();
+            logger.debug(sub);
+            return sub;
+        }catch (Exception e){
+            logger.error(e);
+            return null;
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ public class PrecioEntity implements Serializable {
     @Column(name = "formula", nullable = false)
     private String formula;
 
-    @OneToOne(mappedBy = "precio")
+    @OneToOne(mappedBy = "precio", fetch=FetchType.LAZY)
     private SegmentoEntity segmento;
     
 }

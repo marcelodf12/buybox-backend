@@ -19,6 +19,7 @@ import py.com.buybox.trackingSystem.dto.PaqueteDTO;
 import py.com.buybox.trackingSystem.dto.PaqueteImportDto;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.repository.PaqueteEntityRepository;
+import py.com.buybox.trackingSystem.security.JwtUtil;
 import py.com.buybox.trackingSystem.services.PaqueteImportService;
 
 import java.time.LocalDate;
@@ -36,6 +37,9 @@ public class PaqueteBackOfficeRest {
 
     @Autowired
     private PaqueteImportService paqueteImportService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PreAuthorize("hasRole('LIST_PAQUETE')")
     @GetMapping()
@@ -82,9 +86,13 @@ public class PaqueteBackOfficeRest {
 
     @PostMapping("import")
     @PreAuthorize("hasRole('ALTA_PAQUETE')")
-    public ResponseEntity importarPaquetesRest(@RequestParam("file") MultipartFile file){
+    public ResponseEntity importarPaquetesRest(
+            @RequestParam("file") MultipartFile file,
+            @RequestHeader("Authorization") String token
+    ){
+        String mail = jwtUtil.getSubject(token);
         GeneralResponse<List<PaqueteImportDto>, Paginable> r = (new GeneralResponse<>());
-        List<PaqueteImportDto> paquetes = this.paqueteImportService.preImport(file);
+        List<PaqueteImportDto> paquetes = this.paqueteImportService.preImport(file, mail);
         r.setBody(paquetes);
         return new ResponseEntity<>(r, HttpStatus.OK);
     }

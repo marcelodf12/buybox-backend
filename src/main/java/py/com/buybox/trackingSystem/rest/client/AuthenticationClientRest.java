@@ -31,7 +31,7 @@ public class AuthenticationClientRest {
 
     @PostMapping()
     @RequestMapping("new/register")
-    public ResponseEntity register(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity newRegister(@RequestBody UsuarioDTO usuarioDTO){
         GeneralResponse<UsuarioDTO, Object> r = new GeneralResponse<>();
         UsuarioEntity nuevoUser = null;
 
@@ -57,7 +57,7 @@ public class AuthenticationClientRest {
 
     @GetMapping()
     @RequestMapping("confirmar/register")
-    public ResponseEntity confirmar(@RequestParam String check){
+    public ResponseEntity confirmarRegister(@RequestParam String check){
         GeneralResponse<UsuarioDTO, Object> r = new GeneralResponse<>();
         if(!StringUtils.isEmpty(check)) {
             UsuarioEntity u = this.authenticationService.confirmarRegistro(check);
@@ -72,6 +72,42 @@ public class AuthenticationClientRest {
             }
         }
         return new ResponseEntity<>(r, HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping()
+    @RequestMapping("new/recovery")
+    public ResponseEntity newRecovery(@RequestBody UsuarioDTO usuarioDTO){
+        GeneralResponse<Object, Object> r = new GeneralResponse<>();
+        if(!StringUtils.isAnyEmpty(usuarioDTO.getCorreo())) {
+            try {
+                authenticationService.generateRecovery(usuarioDTO);
+            }catch (Exception e){
+                return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            r.setHeader(HeadersCodes.GENERAL_SUCCESS,true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+        }else{
+            r.setHeader(HeadersCodes.FIELD_MISSING, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
+            return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @PostMapping()
+    @RequestMapping("confirmar/recovery")
+    public ResponseEntity confirmarRecovery(@RequestBody UsuarioDTO usuarioDTO){
+        GeneralResponse<Object, Object> r = new GeneralResponse<>();
+        if(!StringUtils.isAnyEmpty(usuarioDTO.getCorreo(), usuarioDTO.getLinkDeRecuperacion())) {
+            try {
+                authenticationService.recovery(usuarioDTO);
+            }catch (Exception e){
+                return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            r.setHeader(HeadersCodes.GENERAL_SUCCESS,true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+        }else{
+            r.setHeader(HeadersCodes.FIELD_MISSING, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
+            return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
 }

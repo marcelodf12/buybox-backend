@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .cors().and()
                 .csrf().disable()
-                .authorizeRequests().antMatchers("/login", "/**/register", "/error").permitAll() //permitimos el acceso a /login a cualquiera
+                .authorizeRequests().antMatchers("/login", "/**/register", "/**/recovery", "/error").permitAll() //permitimos el acceso a /login a cualquiera
                 .anyRequest().authenticated() //cualquier otra peticion requiere autenticacion
                 .and()
                 // Las peticiones /login pasaran previamente por este filtro

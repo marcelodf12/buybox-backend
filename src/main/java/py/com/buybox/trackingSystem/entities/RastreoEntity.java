@@ -22,7 +22,7 @@ public class RastreoEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar fechaHora;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "id_paquete", nullable = false)
     private PaqueteEntity paquete;
 

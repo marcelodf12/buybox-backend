@@ -60,7 +60,7 @@ public class SucursalEntity implements Serializable {
     @Column(name = "rastreable", nullable = false)
     private Integer rastreable;
 
-    @OneToMany(mappedBy="sucursal", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="sucursal", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private List<RastreoEntity> rastreoList;
 
     @OneToMany(mappedBy="sucursalDestino", cascade = CascadeType.ALL)

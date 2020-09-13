@@ -10,4 +10,5 @@ public class EntitiesValues {
     public static final Integer USUARIO_ELIMINADO = -99;
 
     public static final String PERMISO_CONFIRMAR_REGISTRO = "CONFIRM_REGISTER";
+    public static final String PERMISO_RECUPERAR_PASS = "RECOVERY_PASS";
 }
