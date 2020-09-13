@@ -78,18 +78,23 @@ public class AuthenticationClientRest {
     @RequestMapping("new/recovery")
     public ResponseEntity newRecovery(@RequestBody UsuarioDTO usuarioDTO){
         GeneralResponse<Object, Object> r = new GeneralResponse<>();
+        UsuarioEntity user = null;
         if(!StringUtils.isAnyEmpty(usuarioDTO.getCorreo())) {
             try {
-                authenticationService.generateRecovery(usuarioDTO);
+                user = authenticationService.generateRecovery(usuarioDTO);
             }catch (Exception e){
                 return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            r.setHeader(HeadersCodes.GENERAL_SUCCESS,true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+            if(user!=null){
+                r.setHeader(HeadersCodes.GENERAL_SUCCESS,true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+                return new ResponseEntity<>(r, HttpStatus.OK);
+            }else{
+                r.setHeader(HeadersCodes.EMAIL_NOT_EXIST,true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
+            }
         }else{
             r.setHeader(HeadersCodes.FIELD_MISSING, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
-            return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(r, HttpStatus.OK);
+        return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping()
