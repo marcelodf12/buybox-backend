@@ -3,6 +3,7 @@ package py.com.buybox.trackingSystem.rest.client;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +75,7 @@ public class ProfileClientRest {
             return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        r.setHeader(HeadersCodes.GENERAL_SUCCESS, false, "", "");
+        r.setHeader(HeadersCodes.EDICION_CORRECTA, true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
         r.setBody(new ClienteDTO(clienteEntity));
 
         return new ResponseEntity<>(r, HttpStatus.OK);

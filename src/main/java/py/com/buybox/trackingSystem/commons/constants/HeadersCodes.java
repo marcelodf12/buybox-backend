@@ -6,6 +6,7 @@ public class HeadersCodes {
 
     public static final Integer USER_CREATED_SUCCESS = 2001;
     public static final Integer CLIENTE_SIN_PAQUETES = 2002;
+    public static final Integer EDICION_CORRECTA = 2003;
 
     public static final Integer SORTING_MALFORMED = 4001;
     public static final Integer FIELD_MISSING = 4002;
