@@ -52,6 +52,15 @@ public class SortUtil {
                             entry("ingreso","ingreso"),
                             entry("destino","s.nombre")
                     )
-            )
+            ),
+            entry("clientes",
+                    Map.ofEntries(
+                            entry("default", "casilla"),
+                            entry("cliente", "nombre"),
+                            entry("cedula", "ruc"),
+                            entry("casilla", "casilla"),
+                            entry("correo", "correo")
+                    )
+                    )
     );
 }

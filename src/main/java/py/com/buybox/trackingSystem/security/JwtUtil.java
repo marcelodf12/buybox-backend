@@ -52,7 +52,7 @@ public class JwtUtil {
 
                 // Vamos a asignar un tiempo de expiracion de 1 minuto
                 // solo con fines demostrativos en el video que hay al final
-                .setExpiration(new Date(System.currentTimeMillis() + (appConfig.expiration*1000)))
+                .setExpiration(new Date(System.currentTimeMillis() + (appConfig.expiration*1000L)))
 
                 // Hash con el que firmaremos la clave
                 .signWith(SignatureAlgorithm.HS512, appConfig.secret)

@@ -43,6 +43,9 @@ public class PaqueteImportService {
     private UsuarioEntityRepository usuarioEntityRepository;
 
     @Autowired
+    private RastreoService rastreoService;
+
+    @Autowired
     private AppConfig appConfig;
 
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -173,15 +176,8 @@ public class PaqueteImportService {
                         }else{
                             p.setSucursalDestino(sucursalDestinoDefault);
                         }
-                        p.setEstado(p.getSucursalActual().getEstadoDefecto());
-                        p.setRastreoList(new ArrayList<>());
-                        RastreoEntity rastreoEntity = new RastreoEntity();
-                        Calendar calendar = Calendar.getInstance();
-                        rastreoEntity.setFechaHora(calendar);
-                        rastreoEntity.setSucursal(sucursalOrigenDefault);
-                        rastreoEntity.setUsuario(userEntity);
-                        rastreoEntity.setPaquete(p);
-                        p.getRastreoList().add(rastreoEntity);
+
+                        this.rastreoService.mover(p, sucursalOrigenDefault, userEntity);
 
                         paqueteEntityRepository.save(p);
                         paqueteLinea.setP(new PaqueteDTO(p));

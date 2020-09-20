@@ -31,6 +31,22 @@ public class ClienteService {
         ClienteEntity clienteEntity = clienteEntityRepository.findByCasilla(casilla);
         logger.debug("Edit cliente: ");
         logger.debug(new ClienteDTO(clienteEntity));
+        setProperties(clienteEntity, clienteDTO);
+        return clienteEntityRepository.save(clienteEntity);
+    }
+
+    public ClienteEntity edit(ClienteDTO clienteDTO){
+        Optional<ClienteEntity> clienteEntity = clienteEntityRepository.findById(clienteDTO.getIdCliente());
+        if(clienteEntity.get()!=null){
+            logger.debug("Edit cliente: ");
+            logger.debug(new ClienteDTO(clienteEntity.get()));
+            setProperties(clienteEntity.get(), clienteDTO);
+            return clienteEntityRepository.save(clienteEntity.get());
+        }
+        return null;
+    }
+
+    private void setProperties(ClienteEntity clienteEntity, ClienteDTO clienteDTO){
         if(clienteDTO.getNombre()!=null)
             clienteEntity.setNombre(clienteDTO.getNombre());
 
@@ -65,6 +81,5 @@ public class ClienteService {
             if(clienteDTO.getApellido()!=null)
                 clienteEntity.getUsuario().setApellido(clienteDTO.getApellido());
         }
-        return clienteEntityRepository.save(clienteEntity);
     }
 }

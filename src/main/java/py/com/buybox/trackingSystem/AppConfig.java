@@ -17,10 +17,10 @@ public class AppConfig {
     public String secret;
 
     @Value("${jwt.expiration}")
-    public Integer expiration;
+    public Long expiration;
 
-    @Value("${register.expiration}")
-    public Integer registerExpiration;
+    @Value("${register.expiration.day}")
+    public Integer registerExpirationDays;
 
     @Value("${register.secret}")
     public String registerSecret;
@@ -48,6 +48,12 @@ public class AppConfig {
 
     @Value("${mail.subject.recovery}")
     public String subjectRecovery;
+
+    @Value("${paquete.mover.titulo}")
+    public String tituloMoverPaquete;
+
+    @Value("${paquete.recepcion.titulo}")
+    public String tituloRecepcionPaquete;
 
 
     @Bean

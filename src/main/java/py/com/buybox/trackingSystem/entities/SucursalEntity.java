@@ -32,7 +32,7 @@ public class SucursalEntity implements Serializable {
     @JoinColumn(name = "id_departamento")
     private DepartamentoEntity departamento;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "id_estado_defecto", nullable = false)
     private EstadoEntity estadoDefecto;
 
@@ -63,13 +63,13 @@ public class SucursalEntity implements Serializable {
     @OneToMany(mappedBy="sucursal", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private List<RastreoEntity> rastreoList;
 
-    @OneToMany(mappedBy="sucursalDestino", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="sucursalDestino", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private List<PaqueteEntity> paquetesDestinos;
 
-    @OneToMany(mappedBy="sucursalActual", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="sucursalActual", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
     private List<PaqueteEntity> paquetesActuales;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal", fetch=FetchType.LAZY)
     private List<ClienteEntity> clienteList;
 
     

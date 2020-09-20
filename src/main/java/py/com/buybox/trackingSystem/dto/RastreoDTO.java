@@ -11,10 +11,13 @@ import java.util.Calendar;
 public class RastreoDTO {
     private Integer idSucursal;
     private Calendar fechaHora;
+    private String usuario;
 
     public RastreoDTO(RastreoEntity _rastreo){
         if(_rastreo.getSucursal()!=null)
             this.idSucursal = _rastreo.getSucursal().getIdSucursal();
+        if(_rastreo.getUsuario()!=null)
+            this.usuario = _rastreo.getUsuario().getCorreo();
         fechaHora = _rastreo.getFechaHora();
     }
 }

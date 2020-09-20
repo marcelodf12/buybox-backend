@@ -20,7 +20,7 @@ public class SegmentoEntity implements Serializable {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "segmento")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "segmento", fetch = FetchType.LAZY)
     private List<ClienteEntity> clienteList;
 
     @OneToOne

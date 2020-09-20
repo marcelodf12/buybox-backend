@@ -70,6 +70,15 @@ public class AuthenticationService {
                 user.setBloqueadoHasta(null);
                 user.setIntentosFallidos(0);
                 user.setActivo(EntitiesValues.USUARIO_ACTIVO);
+
+                usuarioEntityRepository.save(user);
+
+                if(user.getCliente()!=null && StringUtils.isEmpty(user.getCliente().getCasilla())){
+                    CasillaEntity casilla = new CasillaEntity();
+                    casillaEntityRepository.save(casilla);
+                    user.getCliente().setCasilla(appConfig.prefixCasilla + casilla.getNumeroCasilla());
+                }
+
                 return usuarioEntityRepository.save(user);
             }
         }catch (Exception e){
@@ -148,10 +157,12 @@ public class AuthenticationService {
         return null;
     }
 
-    private String link(String email, String rol){
+    private String link(String email, String rol, Date date){
+        Date vencimiento = date;
+        logger.debug(vencimiento);
         return Jwts.builder()
                 .setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + (appConfig.registerExpiration*1000)))
+                .setExpiration(vencimiento)
                 .signWith(SignatureAlgorithm.HS512, appConfig.registerSecret)
                 .claim(Constants.JWT_PERMISSION, rol)
                 .compact();
@@ -185,10 +196,10 @@ public class AuthenticationService {
 
     private void generarLink(UsuarioEntity user, String permiso){
         Calendar vencimiento = Calendar.getInstance();
-        vencimiento.add(Calendar.SECOND, appConfig.registerExpiration);
+        vencimiento.add(Calendar.DAY_OF_YEAR, appConfig.registerExpirationDays);
         user.setLinkFechaVencimiento(vencimiento);
 
-        user.setLinkDeRecuperacion(link(user.getCorreo(), permiso));
+        user.setLinkDeRecuperacion(link(user.getCorreo(), permiso, user.getLinkFechaVencimiento().getTime()));
     }
 
     private void enviarCorreo(UsuarioEntity user, String subject, String templateName) throws IOException, MessagingException {
