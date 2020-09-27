@@ -21,4 +21,6 @@ public class ConfigurationDTO {
 
     List<EtiquetaDTO> etiquestas;
 
+    List<SegmentoDTO> segmentos;
+
 }

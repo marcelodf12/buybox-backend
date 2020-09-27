@@ -7,8 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import py.com.buybox.trackingSystem.dto.ClienteDTO;
 import py.com.buybox.trackingSystem.entities.ClienteEntity;
+import py.com.buybox.trackingSystem.entities.SegmentoEntity;
 import py.com.buybox.trackingSystem.entities.SucursalEntity;
 import py.com.buybox.trackingSystem.repository.ClienteEntityRepository;
+import py.com.buybox.trackingSystem.repository.SegmentoEntityRepository;
 import py.com.buybox.trackingSystem.repository.SucursalEntityRepository;
 
 import java.util.Optional;
@@ -25,6 +27,9 @@ public class ClienteService {
     private SucursalEntityRepository sucursalEntityRepository;
 
     @Autowired
+    private SegmentoEntityRepository segmentoEntityRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public ClienteEntity edit(ClienteDTO clienteDTO, String casilla){
@@ -37,7 +42,7 @@ public class ClienteService {
 
     public ClienteEntity edit(ClienteDTO clienteDTO){
         Optional<ClienteEntity> clienteEntity = clienteEntityRepository.findById(clienteDTO.getIdCliente());
-        if(clienteEntity.get()!=null){
+        if(clienteEntity.isPresent()){
             logger.debug("Edit cliente: ");
             logger.debug(new ClienteDTO(clienteEntity.get()));
             setProperties(clienteEntity.get(), clienteDTO);
@@ -70,8 +75,14 @@ public class ClienteService {
 
         if(clienteDTO.getIdSucursal()!=null){
             Optional<SucursalEntity> sucursalEntity = sucursalEntityRepository.findById(clienteDTO.getIdSucursal());
-            if(sucursalEntity.get()!=null)
+            if(sucursalEntity.isPresent())
                 clienteEntity.setSucursal(sucursalEntity.get());
+        }
+
+        if(clienteDTO.getIdSegmento()!=null){
+            Optional<SegmentoEntity> segmentoEntity = segmentoEntityRepository.findById(clienteDTO.getIdSegmento());
+            if(segmentoEntity.isPresent())
+                clienteEntity.setSegmento(segmentoEntity.get());
         }
 
         if(clienteEntity.getUsuario()!=null){

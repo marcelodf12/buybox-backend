@@ -34,6 +34,9 @@ public class ConfigurationService {
     @Autowired
     private EtiquetaEntityRepository etiquetaEntityRepository;
 
+    @Autowired
+    private SegmentoEntityRepository segmentoEntityRepository;
+
     @Cacheable("listarConfiguration")
     public ConfigurationDTO listarConfiguracion(){
         ConfigurationDTO c;
@@ -46,6 +49,7 @@ public class ConfigurationService {
             c.setDepartamentos(DepartamentoDTO.listFromEntity(departamentoEntityRepository.findAll()));
             c.setCategorias(CategoriaDTO.listFromEntity(categoriaEntityRepository.findAll()));
             c.setEtiquestas(EtiquetaDTO.listFromEntity(etiquetaEntityRepository.findAll()));
+            c.setSegmentos(SegmentoDTO.listFromEntity(segmentoEntityRepository.findAll()));
             return c;
         }catch (Exception e){
             this.logger.error(e);
