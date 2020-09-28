@@ -13,6 +13,7 @@ public class HeadersCodes {
     public static final Integer DUPLICATED_USER = 4003;
     public static final Integer ENTITY_NOT_EXIST = 4004;
     public static final Integer EMAIL_NOT_EXIST = 4005;
+    public static final Integer PAQUETE_NOT_EXIST = 4006;
 
     public static final Integer GENERAL_ERROR = 9999;
 

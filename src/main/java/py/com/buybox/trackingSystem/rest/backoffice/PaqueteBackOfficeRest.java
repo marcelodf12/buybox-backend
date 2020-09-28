@@ -106,8 +106,13 @@ public class PaqueteBackOfficeRest {
             logger.error(e);
             return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        PaqueteDTO paqueteDTO = new PaqueteDTO(paqueteEntity, paqueteEntity.getRastreoList());
-        r.setBody(paqueteDTO);
+        if(paqueteEntity!=null){
+            PaqueteDTO paqueteDTO = new PaqueteDTO(paqueteEntity, paqueteEntity.getRastreoList());
+            r.setBody(paqueteDTO);
+        }else{
+            r.setHeader(HeadersCodes.PAQUETE_NOT_EXIST, true, Constants.LEVEL_ERROR, Constants.TYPE_TOAST);
+            return new ResponseEntity<>(r, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
