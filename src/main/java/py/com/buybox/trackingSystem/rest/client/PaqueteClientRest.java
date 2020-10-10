@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -85,7 +86,10 @@ public class PaqueteClientRest {
             if (!StringUtils.isEmpty(casilla)) {
                 paquete = paqueteEntityRepository.findById(idPaquete);
                 if(paquete.get()!=null){
-                    paqueteDTO = new PaqueteDTO(paquete.get(), paquete.get().getRastreoList());
+                    paqueteDTO = new PaqueteDTO(paquete.get(), paquete.get().getRastreoList().stream().filter(
+                            rastreoEntity -> (rastreoEntity.getSucursal().getRastreable() == 1)
+                            ).collect(Collectors.toList())
+                    );
                     if(casilla.compareTo(paqueteDTO.getCasilla())!=0){
                         paqueteDTO = null;
                     }
