@@ -31,7 +31,9 @@ public class PaqueteDTO {
     private Integer idEstado;
     private LocalDate ingreso;
     private String destino;
+    private Integer idSucursalDestino;
     private String sucursalActual;
+    private Integer idSucursalActual;
     private String casilla;
     private Integer updated;
     private List<RastreoDTO> rastreo;
@@ -63,9 +65,11 @@ public class PaqueteDTO {
         }
         if(paqueteEntity.getSucursalDestino()!=null){
             this.destino=paqueteEntity.getSucursalDestino().getNombre();
+            this.idSucursalDestino=paqueteEntity.getSucursalDestino().getIdSucursal();
         }
         if(paqueteEntity.getSucursalActual()!=null){
             this.sucursalActual=paqueteEntity.getSucursalActual().getNombre();
+            this.idSucursalActual=paqueteEntity.getSucursalActual().getIdSucursal();
         }
     }
 

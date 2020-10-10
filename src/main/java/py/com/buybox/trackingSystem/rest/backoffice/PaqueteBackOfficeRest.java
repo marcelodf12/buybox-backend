@@ -58,6 +58,8 @@ public class PaqueteBackOfficeRest {
             @RequestParam(defaultValue = "") String casilla,
             @RequestParam(defaultValue = "") String numeroTracking,
             @RequestParam(defaultValue = "") String cliente,
+            @RequestParam(defaultValue = "") String actual,
+            @RequestParam(defaultValue = "") String destino,
             @RequestParam(defaultValue = "1999-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate desde,
             @RequestParam(defaultValue = "2050-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate hasta,
             @RequestParam Integer idSucursal,
@@ -79,6 +81,8 @@ public class PaqueteBackOfficeRest {
                     hasta.plusDays(1),
                     numeroTracking,
                     cliente,
+                    actual,
+                    destino,
                     PageRequest.of(currentPage, perPage, Sort.by(SortUtil.sortingList(sorting, "paquetes")))
 
             );

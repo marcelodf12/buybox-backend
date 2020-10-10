@@ -63,7 +63,16 @@ public class RastreoService {
             Locale locale = new Locale("es_ES");
             final Context ctx = new Context(locale);
 
-            if( sucursalEntity.getNotificableLlegada()==1 &&
+            if( sucursalEntity.getNotificableFinal()==1 &&
+                    paqueteEntity.getCliente()!=null &&
+                    paqueteEntity.getSucursalDestino() != null &&
+                    sucursalEntity.getIdSucursal() == paqueteEntity.getSucursalDestino().getIdSucursal()
+            ){
+                ctx.setVariable("titulo", this.appConfig.tituloRecepcionPaquete);
+                ctx.setVariable("cuerpo", this.replaceText(sucursalEntity.getMensajeAlClienteFinal(), paqueteEntity, sucursalEntity));
+                final String htmlContent = this.htmlTemplateEngine.process("generic-template.html", ctx);
+                senderMailService.sendEmail(this.appConfig.tituloRecepcionPaquete, htmlContent ,paqueteEntity.getCliente().getCorreo());
+            } else if( sucursalEntity.getNotificableLlegada()==1 &&
                 paqueteEntity.getCliente()!=null
             ){
                 ctx.setVariable("titulo", this.appConfig.tituloMoverPaquete);
@@ -72,16 +81,7 @@ public class RastreoService {
                 senderMailService.sendEmail(this.appConfig.tituloMoverPaquete, htmlContent ,paqueteEntity.getCliente().getCorreo());
             }
 
-            if( sucursalEntity.getNotificableFinal()==1 &&
-                paqueteEntity.getCliente()!=null &&
-                paqueteEntity.getSucursalDestino() != null &&
-                sucursalEntity.getIdSucursal() == paqueteEntity.getSucursalDestino().getIdSucursal()
-            ){
-                ctx.setVariable("titulo", this.appConfig.tituloRecepcionPaquete);
-                ctx.setVariable("cuerpo", this.replaceText(sucursalEntity.getMensajeAlClienteFinal(), paqueteEntity, sucursalEntity));
-                final String htmlContent = this.htmlTemplateEngine.process("generic-template.html", ctx);
-                senderMailService.sendEmail(this.appConfig.tituloRecepcionPaquete, htmlContent ,paqueteEntity.getCliente().getCorreo());
-            }
+
 
             return paqueteEntity;
         }else{

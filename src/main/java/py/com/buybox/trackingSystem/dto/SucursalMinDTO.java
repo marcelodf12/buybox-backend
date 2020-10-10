@@ -13,6 +13,10 @@ public class SucursalMinDTO {
     private Integer iB;
     private Integer lt;
     private Integer ln;
+    private String m;
+    private String mf;
+    private Integer bm;
+    private Integer bmf;
 
     public SucursalMinDTO(SucursalEntity _s){
         this.i = _s.getIdSucursal();
@@ -20,6 +24,10 @@ public class SucursalMinDTO {
         if(_s.getBarrio()!=null) this.iB = _s.getBarrio().getIdBarrio();
         this.lt = _s.getLatitud();
         this.ln = _s.getLongitud();
+        this.m = _s.getMensajeAlCliente();
+        this.mf = _s.getMensajeAlClienteFinal();
+        this.bm = _s.getNotificableLlegada();
+        this.bmf = _s.getNotificableFinal();
     }
 
     public static List<SucursalMinDTO> listFromEntity(List<SucursalEntity> entityList){

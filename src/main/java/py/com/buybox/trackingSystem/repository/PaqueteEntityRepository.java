@@ -14,7 +14,8 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
 
     @Query("SELECT P FROM PaqueteEntity P\n" +
             "JOIN P.cliente bc\n" +
-            "JOIN P.sucursalDestino s\n" +
+            "JOIN P.sucursalDestino sD\n" +
+            "JOIN P.sucursalActual sA\n" +
             "WHERE\n" +
             "    UPPER(P.codigoExterno) like UPPER(CONCAT('%', ?1, '%')) AND\n" +
             "    UPPER(P.codigoInterno) like UPPER(CONCAT('%', ?2, '%')) AND\n" +
@@ -22,6 +23,8 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
             "    UPPER(CONCAT(bc.nombre, ' ' , bc.apellido)) like UPPER(CONCAT('%', ?9, '%')) AND\n" +
             "    UPPER(P.vuelo) like UPPER(CONCAT('%', ?3, '%')) AND\n" +
             "    UPPER(bc.casilla) like UPPER(CONCAT('%', ?4, '%')) AND\n" +
+            "    UPPER(sA.nombre) like UPPER(CONCAT('%', ?10, '%')) AND\n" +
+            "    UPPER(sD.nombre) like UPPER(CONCAT('%', ?11, '%')) AND\n" +
             "    P.sucursalActual.id = coalesce(?5, P.sucursalActual.id) AND\n" +
             "    P.ingreso >= ?6 AND P.ingreso <= ?7\n")
     Page<PaqueteEntity> findPaquete(String codigoExterno,
@@ -33,6 +36,8 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
                                     LocalDate hasta,
                                     String numeroTracking,
                                     String cliente,
+                                    String actual,
+                                    String destino,
                                     PageRequest pageRequest
                                     );
 
