@@ -55,6 +55,30 @@ public class AppConfig {
     @Value("${paquete.recepcion.titulo}")
     public String tituloRecepcionPaquete;
 
+    @Value("${mail.subject.contacto}")
+    public String tituloFormularioContacto;
+
+    @Value("${google.recaptcha.key.site}")
+    public String googleSite;
+
+    @Value("${google.recaptcha.key.secret}")
+    public String googleSecret;
+
+    @Value("${google.recaptcha.key.threshold}")
+    public float googleThreshold;
+
+    @Value("${atencion.mail}")
+    public String atencionMail;
+
+    @Value("${mail.body.contacto}")
+    public String bodyContactoMail;
+
+    @Value("${mail.contacto.success}")
+    public String mailContactoSuccess;
+
+    @Value("${mail.contacto.error}")
+    public String mailContactoError;
+
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {

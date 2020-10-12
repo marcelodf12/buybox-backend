@@ -34,4 +34,21 @@ public class SenderMailService {
 
     }
 
+    @Async
+    public void sendEmail(String subject, String text, String to, String from) throws MessagingException, IOException {
+
+        MimeMessage msg = javaMailSender.createMimeMessage();
+
+        // true = multipart message
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+
+        helper.setTo(to);
+        helper.setFrom(from);
+        helper.setSubject(subject);
+        helper.setText(text, true);
+
+        javaMailSender.send(msg);
+
+    }
+
 }
