@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>py.com.buybox</groupId>
 	<artifactId>trackingSystem</artifactId>
-	<version>1.0.5-RELEASE</version>
+	<version>1.1.0-RELEASE</version>
 	<name>trackingSystem</name>
 	<description>Demo project for Spring Boot</description>
 
