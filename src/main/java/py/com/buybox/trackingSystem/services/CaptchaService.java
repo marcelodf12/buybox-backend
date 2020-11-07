@@ -38,7 +38,7 @@ public class CaptchaService {
     @Autowired
     private SenderMailService senderMailService;
 
-    private static Pattern RESPONSE_PATTERN = Pattern.compile("[=\\.@A-Za-z\\d\\n\\r\\s\\t,\\+\\-\\*\\?¿\\!\\¡\\\"\\;_-]+");
+    private static Pattern RESPONSE_PATTERN = Pattern.compile("[=\\.@A-Za-z:áéíóúäëïöüâêîôû~àèìòù%&0-9/\\d\\n\\r\\s\\t,\\+\\-\\*\\?¿\\!\\¡\\\"\\;_-]+");
 
     public void processResponse(GoogleMail response, String ip) throws InvalidReCaptchaException, ReCaptchaInvalidException, IOException, MessagingException {
         if(
