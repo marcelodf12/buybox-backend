@@ -140,4 +140,32 @@ public class PaqueteClientRest {
         return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("{id}/autorizar")
+    public ResponseEntity solicitarDelivery(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("id") Integer idPaquete,
+            @RequestBody PaqueteDTO paqueteDTO
+    ){
+        GeneralResponse<PaqueteDTO, Paginable> r = (new GeneralResponse<>());
+        PaqueteEntity paquete = null;
+        try {
+            String casilla = jwtUtil.getClaim(token, "casilla");
+            logger.debug(casilla);
+            if (!StringUtils.isEmpty(casilla)) {
+                paquete = paqueteService.autorizar(paqueteDTO, idPaquete, casilla);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if(paquete!=null){
+            r.setHeader(HeadersCodes.AUTORIZADO_SUCCESS, true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+            r.setBody(new PaqueteDTO(paquete));
+        }else{
+            r.setHeader(HeadersCodes.ENTITY_NOT_EXIST, true, Constants.LEVEL_WARN, Constants.TYPE_TOAST);
+            return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
 }

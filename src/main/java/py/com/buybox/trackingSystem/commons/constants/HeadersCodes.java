@@ -8,6 +8,7 @@ public class HeadersCodes {
     public static final Integer CLIENTE_SIN_PAQUETES = 2002;
     public static final Integer EDICION_CORRECTA = 2003;
     public static final Integer DELIVERY_REQUEST_SUCCESS = 2004;
+    public static final Integer AUTORIZADO_SUCCESS = 2005;
 
     public static final Integer SORTING_MALFORMED = 4001;
     public static final Integer FIELD_MISSING = 4002;

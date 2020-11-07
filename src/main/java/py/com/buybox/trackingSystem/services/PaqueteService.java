@@ -8,6 +8,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import py.com.buybox.trackingSystem.AppConfig;
 import py.com.buybox.trackingSystem.dto.GeoDto;
+import py.com.buybox.trackingSystem.dto.PaqueteDTO;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.entities.RastreoEntity;
 import py.com.buybox.trackingSystem.entities.SucursalEntity;
@@ -77,6 +78,19 @@ public class PaqueteService {
             return null;
         }
     }
+
+    public PaqueteEntity autorizar(PaqueteDTO paqueteDTO, Integer idPaquete, String casilla) {
+        PaqueteEntity paqueteEntity = paqueteEntityRepository.findById(idPaquete).orElse(null);
+        if(paqueteEntity != null && casilla.compareTo(paqueteEntity.getCliente().getCasilla()) == 0 ){
+            paqueteEntity.setAutorizadoNombre(paqueteDTO.getAutorizadoNombre());
+            paqueteEntity.setAutorizadoDocumento(paqueteDTO.getAutorizadoDocumento());
+            return paqueteEntityRepository.save(paqueteEntity);
+        }else{
+            return null;
+        }
+    }
+
+
 
     private String replaceText(String text, PaqueteEntity paqueteEntity){
         logger.debug(text);

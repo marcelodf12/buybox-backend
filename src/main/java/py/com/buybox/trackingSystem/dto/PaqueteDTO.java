@@ -1,6 +1,7 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.entities.RastreoEntity;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class PaqueteDTO {
     private Integer idPaquete;
     private String numeroTracking;
