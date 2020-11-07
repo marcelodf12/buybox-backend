@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -84,5 +85,11 @@ public class PaqueteEntity implements Serializable {
 
     @Column(name = "ingreso", columnDefinition = "DATE")
     private LocalDate ingreso;
-    
+
+    @Column(name = "lng")
+    private BigDecimal lng;
+
+    @Column(name = "lat")
+    private BigDecimal lat;
+
 }

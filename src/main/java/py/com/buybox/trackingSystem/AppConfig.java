@@ -79,6 +79,12 @@ public class AppConfig {
     @Value("${mail.contacto.error}")
     public String mailContactoError;
 
+    @Value("${delivery.title}")
+    public String titleDelivery;
+
+    @Value("${delivery.body}")
+    public String bodyDelivery;
+
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {

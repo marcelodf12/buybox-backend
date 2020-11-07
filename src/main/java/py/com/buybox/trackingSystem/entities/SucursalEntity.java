@@ -72,5 +72,14 @@ public class SucursalEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal", fetch=FetchType.LAZY)
     private List<ClienteEntity> clienteList;
 
+    @Column(name = "is_final", nullable = true)
+    private Integer isFinal;
+
+    @Column(name = "is_delivery", nullable = true)
+    private Integer isDelivery;
+
+    @Column(name = "mail_delivery", nullable = true)
+    private String mailDelivery;
+
     
 }

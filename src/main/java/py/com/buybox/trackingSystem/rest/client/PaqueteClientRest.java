@@ -16,10 +16,12 @@ import py.com.buybox.trackingSystem.commons.constants.HeadersCodes;
 import py.com.buybox.trackingSystem.commons.dto.GeneralResponse;
 import py.com.buybox.trackingSystem.commons.dto.Paginable;
 import py.com.buybox.trackingSystem.commons.util.SortUtil;
+import py.com.buybox.trackingSystem.dto.GeoDto;
 import py.com.buybox.trackingSystem.dto.PaqueteDTO;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.repository.PaqueteEntityRepository;
 import py.com.buybox.trackingSystem.security.JwtUtil;
+import py.com.buybox.trackingSystem.services.PaqueteService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +38,9 @@ public class PaqueteClientRest {
 
     @Autowired
     private PaqueteEntityRepository paqueteEntityRepository;
+
+    @Autowired
+    private PaqueteService paqueteService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -100,6 +105,34 @@ public class PaqueteClientRest {
         }
         if(paqueteDTO!=null){
             r.setBody(paqueteDTO);
+        }else{
+            r.setHeader(HeadersCodes.ENTITY_NOT_EXIST, true, Constants.LEVEL_WARN, Constants.TYPE_TOAST);
+            return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('CLIENT')")
+    @PostMapping("{id}/delivery")
+    public ResponseEntity solicitarDelivery(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("id") Integer idPaquete,
+            @RequestBody GeoDto geo
+            ){
+        GeneralResponse<PaqueteDTO, Paginable> r = (new GeneralResponse<>());
+        PaqueteEntity paquete = null;
+        try {
+            String casilla = jwtUtil.getClaim(token, "casilla");
+            logger.debug(casilla);
+            if (!StringUtils.isEmpty(casilla)) {
+                paquete = paqueteService.delivery(geo, idPaquete, casilla);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if(paquete!=null){
+            r.setHeader(HeadersCodes.DELIVERY_REQUEST_SUCCESS, true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+            r.setBody(new PaqueteDTO(paquete));
         }else{
             r.setHeader(HeadersCodes.ENTITY_NOT_EXIST, true, Constants.LEVEL_WARN, Constants.TYPE_TOAST);
             return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);

@@ -4,6 +4,7 @@ import lombok.Data;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.entities.RastreoEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class PaqueteDTO {
     private String casilla;
     private Integer updated;
     private List<RastreoDTO> rastreo;
+    private Integer delivery;
+    private BigDecimal lng;
+    private BigDecimal lat;
 
     public PaqueteDTO(PaqueteEntity paqueteEntity){
         this.idPaquete=paqueteEntity.getIdPaquete();
@@ -55,6 +59,8 @@ public class PaqueteDTO {
         this.codigoInterno=paqueteEntity.getCodigoInterno();
         this.codigoExterno=paqueteEntity.getCodigoExterno();
         this.ingreso=paqueteEntity.getIngreso();
+        this.lat=paqueteEntity.getLat();
+        this.lng=paqueteEntity.getLng();
         if(paqueteEntity.getCliente()!=null) {
             this.idCliente = paqueteEntity.getCliente().getIdCliente();
             this.clienteNombreApellido=paqueteEntity.getCliente().getApellido() + ", " + paqueteEntity.getCliente().getNombre();
@@ -70,6 +76,21 @@ public class PaqueteDTO {
         if(paqueteEntity.getSucursalActual()!=null){
             this.sucursalActual=paqueteEntity.getSucursalActual().getNombre();
             this.idSucursalActual=paqueteEntity.getSucursalActual().getIdSucursal();
+            this.delivery = -1;
+            if(paqueteEntity.getSucursalActual().getIsDelivery() == 1 ){
+                if(paqueteEntity.getSucursalActual().getIdSucursal() == paqueteEntity.getCliente().getSucursal().getIdSucursal()){
+                    if(paqueteEntity.getLng() == null || paqueteEntity.getLat() == null){
+                        this.delivery = 0;
+                    }else{
+                        this.delivery = 1;
+                    }
+
+                }
+            }
+        }
+        // Esto en un futuro hay que refactorizar
+        if("retirado".compareTo(paqueteEntity.getEstado().getEstado())==0){
+            this.delivery = -2;
         }
     }
 
