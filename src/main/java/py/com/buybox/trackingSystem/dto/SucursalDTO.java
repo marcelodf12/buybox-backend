@@ -1,20 +1,23 @@
 package py.com.buybox.trackingSystem.dto;
 
 import lombok.Data;
-import py.com.buybox.trackingSystem.entities.SucursalEntity;
+import lombok.NoArgsConstructor;
+import py.com.buybox.trackingSystem.entities.*;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class SucursalDTO {
     private Integer idSucursal;
     private String nombre;
-    private Integer idDepartamento;
-    private Integer idCiudad;
-    private Integer idBarrio;
-    private Integer latitud;
-    private Integer longitud;
+    //private Integer idDepartamento;
+    //private Integer idCiudad;
+    //private Integer idBarrio;
+    //private Integer latitud;
+    //private Integer longitud;
     private Integer rastreable;
     private Integer idEstadoDefecto;
     private Integer editable;
@@ -22,24 +25,30 @@ public class SucursalDTO {
     private Integer notificableFinal;
     private String mensajeAlCliente;
     private String mensajeAlClienteFinal;
+    private Integer isFinal;
+    private Integer isDelivery;
+    private String mailDelivery;
 
     public SucursalDTO(SucursalEntity _sucursal){
         this.idSucursal=_sucursal.getIdSucursal();
         this.nombre=_sucursal.getNombre();
-        this.latitud=_sucursal.getLatitud();
-        this.longitud=_sucursal.getLongitud();
+        //this.latitud=_sucursal.getLatitud();
+        //this.longitud=_sucursal.getLongitud();
         this.rastreable=_sucursal.getRastreable();
         this.editable=_sucursal.getEditable();
         this.notificableLlegada=_sucursal.getNotificableLlegada();
         this.notificableFinal=_sucursal.getNotificableFinal();
         this.mensajeAlCliente=_sucursal.getMensajeAlCliente();
         this.mensajeAlClienteFinal=_sucursal.getMensajeAlClienteFinal();
-        if(_sucursal.getDepartamento()!=null)
+        this.isDelivery=_sucursal.getIsDelivery();
+        this.isFinal=_sucursal.getIsFinal();
+        this.mailDelivery=_sucursal.getMailDelivery();
+        /*if(_sucursal.getDepartamento()!=null)
             this.idDepartamento=_sucursal.getDepartamento().getIdDepartamento();
         if(_sucursal.getCiudad()!=null)
             this.idCiudad=_sucursal.getCiudad().getIdCiudad();
         if(_sucursal.getBarrio()!=null)
-            this.idBarrio=_sucursal.getBarrio().getIdBarrio();
+            this.idBarrio=_sucursal.getBarrio().getIdBarrio();*/
         if(_sucursal.getEstadoDefecto()!=null)
             this.idEstadoDefecto=_sucursal.getEstadoDefecto().getIdEstado();
     }
@@ -51,5 +60,7 @@ public class SucursalDTO {
         }
         return null;
     }
+
+
 
 }

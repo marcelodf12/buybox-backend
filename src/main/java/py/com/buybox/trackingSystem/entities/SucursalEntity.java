@@ -1,6 +1,7 @@
 package py.com.buybox.trackingSystem.entities;
 
 import lombok.Data;
+import py.com.buybox.trackingSystem.dto.SucursalDTO;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -81,5 +82,17 @@ public class SucursalEntity implements Serializable {
     @Column(name = "mail_delivery", nullable = true)
     private String mailDelivery;
 
-    
+    @Transient
+    public void modificar(SucursalDTO _sucursalDto, EstadoEntity _estado){
+        this.setEstadoDefecto(_estado);
+        this.setMensajeAlCliente(_sucursalDto.getMensajeAlCliente());
+        this.setMensajeAlClienteFinal(_sucursalDto.getMensajeAlClienteFinal());
+        this.setNombre(_sucursalDto.getNombre());
+        this.setNotificableFinal(_sucursalDto.getNotificableFinal());
+        this.setNotificableLlegada(_sucursalDto.getNotificableLlegada());
+        this.setRastreable(_sucursalDto.getRastreable());
+        this.setIsFinal(_sucursalDto.getIsFinal());
+        this.setIsDelivery(_sucursalDto.getIsDelivery());
+        this.setMailDelivery(_sucursalDto.getMailDelivery());
+    };
 }
