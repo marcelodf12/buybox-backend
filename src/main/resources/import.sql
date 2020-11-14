@@ -2,6 +2,13 @@
 INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (1, 'CLIENT', 'Permiso por default para clientes');
 INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (2, 'LIST_PAQUETE', 'Permiso para listar paquetes de usuario');
 INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (3, 'ALTA_PAQUETE', 'Permiso para crear paquetes');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (4, 'LIST_CLIENTE', 'Permiso para listar clientes backoffice');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (5, 'EDIT_CLIENTE', 'Permiso para editar clientes backoffice');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (6, 'DETAIL_PAQUETE', 'Permiso para ver detalle de paquete backoffice');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (7, 'LIST_SUCURSAL', 'Permiso para listar sucursales backoffice');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (8, 'MOVE_PAQUETE', 'Permiso para mover paquetes entre sucursales backoffice');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (9, 'EDIT_SUCURSAL', 'Permiso para modificar sucursales');
+INSERT INTO bb_permiso (id_permiso, permiso, descripcion) VALUES (10, 'CREATE_SUCURSAL', 'Permiso para crear sucursales');
 
 INSERT INTO bb_rol (id_rol, rol, descripcion) VALUES (1, 'CLIENTE', 'Cliente Final');
 INSERT INTO bb_rol (id_rol, rol, descripcion) VALUES (2, 'ADMIN', 'Administrador de sistema');
@@ -9,9 +16,21 @@ INSERT INTO bb_rol (id_rol, rol, descripcion) VALUES (3, 'EMPLOY', 'Empleado');
 
 INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (1, 1);
 INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 2);
-INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 2);
 INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 3);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 4);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 5);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 6);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 7);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 8);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 9);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (2, 10);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 2);
 INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 3);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 4);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 5);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 6);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 7);
+INSERT INTO bb_rol_permiso (id_rol, id_permiso) VALUES (3, 8);
 
 /* ESTADOS */
 INSERT INTO bb_estado (id_estado, estado, etiqueta, color) VALUES (1, 'nuevo', 'Nuevo', '#FEB205');
