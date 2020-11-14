@@ -58,7 +58,27 @@ public class SucursalBackOfficeRest {
             sucursalEntityRepository.save(sucursal);
         }catch (Exception e){
             logger.error(e);
-            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        r.setHeader(HeadersCodes.EDICION_CORRECTA, true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
+        r.setBody(new SucursalDTO(sucursal));
+        return new ResponseEntity<>(r, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('CREATE_SUCURSAL')")
+    @PostMapping()
+    public ResponseEntity createSucursal(@RequestBody SucursalDTO sucursalDTO){
+        GeneralResponse<SucursalDTO, Object> r = (new GeneralResponse<>());
+        SucursalEntity sucursal;
+        try {
+            sucursal = new SucursalEntity();
+            EstadoEntity estadoEntity = estadoEntityRepository.findById(sucursalDTO.getIdEstadoDefecto()).orElse(null);
+            sucursal.modificar(sucursalDTO, estadoEntity);
+            sucursal.setEditable(1);
+            sucursalEntityRepository.save(sucursal);
+        }catch (Exception e){
+            logger.error(e);
+            return new ResponseEntity<>(new GeneralResponse<>(e), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         r.setHeader(HeadersCodes.EDICION_CORRECTA, true, Constants.LEVEL_SUCCESS, Constants.TYPE_TOAST);
         r.setBody(new SucursalDTO(sucursal));
