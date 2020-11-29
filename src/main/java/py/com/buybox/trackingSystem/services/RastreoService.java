@@ -3,11 +3,11 @@ package py.com.buybox.trackingSystem.services;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import py.com.buybox.trackingSystem.AppConfig;
+import py.com.buybox.trackingSystem.commons.util.TxtBuilder;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 import py.com.buybox.trackingSystem.entities.RastreoEntity;
 import py.com.buybox.trackingSystem.entities.SucursalEntity;
@@ -69,14 +69,14 @@ public class RastreoService {
                     sucursalEntity.getIdSucursal() == paqueteEntity.getSucursalDestino().getIdSucursal()
             ){
                 ctx.setVariable("titulo", this.appConfig.tituloRecepcionPaquete);
-                ctx.setVariable("cuerpo", this.replaceText(sucursalEntity.getMensajeAlClienteFinal(), paqueteEntity, sucursalEntity));
+                ctx.setVariable("cuerpo", (new TxtBuilder(sucursalEntity.getMensajeAlClienteFinal(), paqueteEntity, sucursalEntity, null, null)).toString());
                 final String htmlContent = this.htmlTemplateEngine.process("generic-template.html", ctx);
                 senderMailService.sendEmail(this.appConfig.tituloRecepcionPaquete, htmlContent ,paqueteEntity.getCliente().getCorreo());
             } else if( sucursalEntity.getNotificableLlegada()==1 &&
                 paqueteEntity.getCliente()!=null
             ){
                 ctx.setVariable("titulo", this.appConfig.tituloMoverPaquete);
-                ctx.setVariable("cuerpo", this.replaceText(sucursalEntity.getMensajeAlCliente(), paqueteEntity,sucursalEntity));
+                ctx.setVariable("cuerpo", (new TxtBuilder(sucursalEntity.getMensajeAlCliente(), paqueteEntity, sucursalEntity, null, null)).toString());
                 final String htmlContent = this.htmlTemplateEngine.process("generic-template.html", ctx);
                 senderMailService.sendEmail(this.appConfig.tituloMoverPaquete, htmlContent ,paqueteEntity.getCliente().getCorreo());
             }
@@ -90,17 +90,5 @@ public class RastreoService {
         }
 
     }
-
-    private String replaceText(String text, PaqueteEntity paqueteEntity, SucursalEntity sucursalEntity){
-        logger.debug(text);
-        text = text.replaceAll("##SUCURSAL##", sucursalEntity.getNombre());
-        text = text.replaceAll("##RASTREO##", paqueteEntity.getNumeroTracking());
-        text = text.replaceAll("##DESCRIPCION##", paqueteEntity.getDescripcion());
-        text = text.replaceAll("##PESO##", String.valueOf((float)paqueteEntity.getPeso()/1000));
-        text = text.replaceAll("##PRECIO##", String.valueOf((float)paqueteEntity.getMontoTotal()/100));
-        logger.debug(text);
-        return text;
-    }
-
 
 }

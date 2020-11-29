@@ -6,21 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import py.com.buybox.trackingSystem.AppConfig;
+import py.com.buybox.trackingSystem.commons.util.TxtBuilder;
 import py.com.buybox.trackingSystem.dto.GoogleMail;
 import py.com.buybox.trackingSystem.dto.GoogleResponse;
-import py.com.buybox.trackingSystem.entities.PaqueteEntity;
-import py.com.buybox.trackingSystem.entities.SucursalEntity;
 import py.com.buybox.trackingSystem.exceptions.InvalidReCaptchaException;
 import py.com.buybox.trackingSystem.exceptions.ReCaptchaInvalidException;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -63,14 +62,15 @@ public class CaptchaService {
         }
         Locale locale = new Locale("es_ES");
         final Context ctx = new Context(locale);
+
+        HashMap<String, String> cuerpo = new HashMap<>();
+        cuerpo.put("%\\{NOMBRE}", response.getNombre());
+        cuerpo.put("%\\{MAIL}", response.getEmail());
+        cuerpo.put("%\\{BODY}", response.getCuerpo());
+        cuerpo.put("%\\{ASUNTO}", response.getAsunto());
+
         ctx.setVariable("titulo", "Formulario de contacto");
-        ctx.setVariable("cuerpo", this.replaceText(
-                appConfig.bodyContactoMail,
-                response.getNombre(),
-                response.getEmail(),
-                response.getCuerpo(),
-                response.getAsunto()
-        ));
+        ctx.setVariable("cuerpo", (new TxtBuilder(appConfig.bodyContactoMail, null, null, null, cuerpo)).toString());
         final String htmlContent = this.htmlTemplateEngine.process("generic-template.html", ctx);
         senderMailService.sendEmail(this.appConfig.tituloFormularioContacto, htmlContent , this.appConfig.atencionMail);
 
@@ -87,16 +87,6 @@ public class CaptchaService {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
-    }
-
-    private String replaceText(String text, String name, String mail, String body, String subject){
-        logger.debug(text);
-        text = text.replaceAll("##NOMBRE##", name);
-        text = text.replaceAll("##MAIL##", mail);
-        text = text.replaceAll("##BODY##", body);
-        text = text.replaceAll("##ASUNTO##", subject);
-        logger.debug(text);
-        return text;
     }
 
 

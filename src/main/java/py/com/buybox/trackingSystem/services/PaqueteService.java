@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import py.com.buybox.trackingSystem.AppConfig;
+import py.com.buybox.trackingSystem.commons.util.TxtBuilder;
 import py.com.buybox.trackingSystem.dto.GeoDto;
 import py.com.buybox.trackingSystem.dto.PaqueteDTO;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
-import py.com.buybox.trackingSystem.entities.RastreoEntity;
 import py.com.buybox.trackingSystem.entities.SucursalEntity;
 import py.com.buybox.trackingSystem.entities.UsuarioEntity;
 import py.com.buybox.trackingSystem.repository.PaqueteEntityRepository;
@@ -18,11 +18,7 @@ import py.com.buybox.trackingSystem.repository.SucursalEntityRepository;
 import py.com.buybox.trackingSystem.repository.UsuarioEntityRepository;
 
 import javax.mail.MessagingException;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.awt.image.Raster;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 @Service
@@ -68,9 +64,9 @@ public class PaqueteService {
             paqueteEntity.setLng(geo.getLng());
             Locale locale = new Locale("es_ES");
             final Context ctx = new Context(locale);
-            final String titulo = this.replaceText(this.appConfig.titleDelivery, paqueteEntity);
+            String titulo = (new TxtBuilder(this.appConfig.titleDelivery, paqueteEntity, null, null, null)).toString();
             ctx.setVariable("titulo", titulo);
-            ctx.setVariable("cuerpo", this.replaceText(this.appConfig.bodyDelivery, paqueteEntity));
+            ctx.setVariable("cuerpo", (new TxtBuilder(this.appConfig.bodyDelivery, paqueteEntity, null, null, null)).toString());
             final String htmlContent = this.htmlTemplateEngine.process("generic-template.html", ctx);
             senderMailService.sendEmail(titulo, htmlContent ,paqueteEntity.getCliente().getCorreo());
             return paqueteEntityRepository.save(paqueteEntity);
@@ -90,17 +86,4 @@ public class PaqueteService {
         }
     }
 
-
-
-    private String replaceText(String text, PaqueteEntity paqueteEntity){
-        logger.debug(text);
-        text = text.replaceAll("##CASILLA##", paqueteEntity.getCliente().getCasilla());
-        text = text.replaceAll("##PAQUETE##", paqueteEntity.getNumeroTracking());
-        text = text.replaceAll("##LNG##", String.valueOf(paqueteEntity.getLng()));
-        text = text.replaceAll("##LAT##", String.valueOf(paqueteEntity.getLat()));
-        text = text.replaceAll("##CELULAR##", paqueteEntity.getCliente().getCelular());
-        text = text.replaceAll("##NOMBRE##", paqueteEntity.getCliente().getNombre() + " " + paqueteEntity.getCliente().getApellido());
-        logger.debug(text);
-        return text;
-    }
 }
