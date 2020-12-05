@@ -5,9 +5,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import py.com.buybox.trackingSystem.dto.ReporteResultDto;
 import py.com.buybox.trackingSystem.entities.PaqueteEntity;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Stream;
 
 
 public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, Integer>, JpaSpecificationExecutor<PaqueteEntity> {
@@ -52,4 +55,23 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
     );
 
     PaqueteEntity findByNumeroTracking(String numeroTracking);
+
+    @Query("SELECT\n" +
+            "    new py.com.buybox.trackingSystem.dto.ReporteResultDto(" +
+            "      sum(P.peso) as peso,\n" +
+            "      sum(P.precio) as precio,\n" +
+            "      sum(P.volumen) as volumen,\n" +
+            "      P.ingreso as fecha,\n" +
+            "      P.estado.idEstado as idEstado,\n" +
+            "      bc.segmento.idSegmento as idSegmento" +
+            "    )\n" +
+            "FROM PaqueteEntity P\n" +
+            "JOIN P.cliente bc\n" +
+            "WHERE P.ingreso >= ?1 AND P.ingreso <= ?2\n" +
+            "GROUP BY P.ingreso, P.estado.idEstado, bc.segmento.idSegmento")
+    List<ReporteResultDto> reporte(
+            LocalDate desde,
+            LocalDate hasta
+    );
+
 }
