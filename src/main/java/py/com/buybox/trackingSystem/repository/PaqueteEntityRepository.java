@@ -61,12 +61,15 @@ public interface PaqueteEntityRepository extends JpaRepository<PaqueteEntity, In
             "      sum(P.peso) as peso,\n" +
             "      sum(P.precio) as precio,\n" +
             "      sum(P.volumen) as volumen,\n" +
+            "      sum(P.montoTotal) as montoTotal,\n" +
             "      P.ingreso as fecha,\n" +
-            "      P.estado.idEstado as idEstado,\n" +
-            "      bc.segmento.idSegmento as idSegmento" +
+            "      e.etiqueta as estado,\n" +
+            "      s.nombre as segmento" +
             "    )\n" +
             "FROM PaqueteEntity P\n" +
             "JOIN P.cliente bc\n" +
+            "JOIN P.estado e\n" +
+            "JOIN bc.segmento s\n" +
             "WHERE P.ingreso >= ?1 AND P.ingreso <= ?2\n" +
             "GROUP BY P.ingreso, P.estado.idEstado, bc.segmento.idSegmento")
     List<ReporteResultDto> reporte(

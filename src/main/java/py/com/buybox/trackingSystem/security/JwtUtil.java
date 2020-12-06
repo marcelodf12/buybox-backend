@@ -136,4 +136,12 @@ public class JwtUtil {
         }
     }
 
+    public String createTokenOneTime(List<String> claimValues, Integer expiration){
+        return Jwts.builder()
+                .setExpiration(new Date(System.currentTimeMillis() + (expiration*1000L)))
+                .signWith(SignatureAlgorithm.HS512, appConfig.secret)
+                .claim(Constants.JWT_PERMISSION, claimValues.stream().collect(Collectors.joining("|")))
+                .compact();
+    }
+
 }
