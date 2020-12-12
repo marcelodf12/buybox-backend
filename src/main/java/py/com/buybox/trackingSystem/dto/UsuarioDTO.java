@@ -69,7 +69,12 @@ public class UsuarioDTO {
 
     public static List<UsuarioDTO> listFromEntity(List<UsuarioEntity> usuarioEntityList){
         if(usuarioEntityList!=null){
-            List<UsuarioDTO> list = usuarioEntityList.stream().map(UsuarioDTO::new).collect(Collectors.toList());
+            List<UsuarioDTO> list = usuarioEntityList.stream().map( usuarioEntity -> {
+                        UsuarioDTO user = new UsuarioDTO(usuarioEntity);
+                        user.setRoles(user.getRoles().stream().filter(rol -> rol.compareTo("CLIENTE") != 0 && rol.compareTo("USUARIO")!=0).collect(Collectors.toList()));
+                        return user;
+                    }
+            ).collect(Collectors.toList());
             return list;
         }
         return null;

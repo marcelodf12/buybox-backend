@@ -20,6 +20,6 @@ public interface UsuarioEntityRepository extends JpaRepository<UsuarioEntity, In
     @Query(" SELECT DISTINCT U FROM UsuarioEntity U\n" +
             " INNER JOIN U.rolList R\n" +
             " WHERE\n" +
-            "    R.rol != 'CLIENTE' AND U.activo >= 0\n")
+            "    R.rol = 'USUARIO' AND U.activo >= 0\n")
     Page<UsuarioEntity> findAllEmployees(PageRequest pageRequest);
 }

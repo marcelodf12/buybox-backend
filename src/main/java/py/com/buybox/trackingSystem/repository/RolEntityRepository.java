@@ -14,4 +14,8 @@ public interface RolEntityRepository extends JpaRepository<RolEntity, Integer>, 
     )
     List<RolEntity> findRolIn(List<String> roles);
 
+    @Query(
+            "SELECT r FROM RolEntity r WHERE NOT r.rol IN ('CLIENTE', 'USUARIO')"
+    )
+    List<RolEntity> findAllAdministrative();
 }
