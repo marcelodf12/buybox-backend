@@ -17,6 +17,7 @@ public class SucursalMinDTO {
     private String mf;
     private Integer bm;
     private Integer bmf;
+    private Integer f;
 
     public SucursalMinDTO(SucursalEntity _s){
         this.i = _s.getIdSucursal();
@@ -28,6 +29,7 @@ public class SucursalMinDTO {
         this.mf = _s.getMensajeAlClienteFinal();
         this.bm = _s.getNotificableLlegada();
         this.bmf = _s.getNotificableFinal();
+        this.f = _s.getIsFinal();
     }
 
     public static List<SucursalMinDTO> listFromEntity(List<SucursalEntity> entityList){
