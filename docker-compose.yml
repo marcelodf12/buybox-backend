@@ -1,0 +1,67 @@
+version: '2'
+services:
+  databasetrack:
+    container_name: databasetrack
+    image: mariadb:latest
+    restart: always
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: AsZxQwErDfCv
+      MARIADB_DATABASE: buybox
+      MARIADB_USER: trackuser
+      MARIADB_PASSWORD: AsZxQwErDfCv123
+    volumes:
+      - tracking_vol:/var/lib/mysql
+    networks:
+      - spring-cloud-network
+    healthcheck:
+      test:  mysql --user=trackuser --password=AsZxQwErDfCv123 -e 'Design your own check script ' LastSchema
+
+  tracksys:
+    container_name: tracksys
+    image: marcelodf12/track-sys-backend
+    ports:
+      - 108080:8080
+    environment:
+      MYSQL_URL: jdbc:mysql://databasetrack:3306/buybox
+      MYSQL_USERNAME: trackuser
+      MYSQL_PASS: AsZxQwErDfCv123
+      MAIL_HOST: italoparaguayo.edu.py
+      MAIL_PORT: 25
+      MAIL_USERNAME: no-reply@mfranco.dev
+      MAIL_PASS: 48tLfW9wAL
+      EMAIL_ATENCION: marcelo@mfranco.dev
+    networks:
+      - spring-cloud-network
+    depends_on:
+      databasetrack:
+        condition: service_healthy
+
+  app:
+    container_name: app-tracksys
+    image: marcelodf12/track-system-landing
+    ports:
+      - 108081:80
+    depends_on:
+      - tracksys
+
+  backoffice:
+    container_name: backoffice-tracksys
+    image: marcelodf12/tracksystem-backoffice
+    ports:
+      - 108082:80
+    depends_on:
+      - tracksys
+
+networks:
+  spring-cloud-network:
+    driver: bridge
+
+volumes:
+  tracking_vol:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=10.0.0.1,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14,nfsvers=4
+      device: ":/mnt/PRINCIPAL_POOL/docker/tracking"
